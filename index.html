@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>울랄라 음성노트 · 말을 글로</title>
+<script>
+/* 여러 코어로 빠르게 변환하기: 같은 폴더의 coi-serviceworker.js를 켭니다 (한 번만 새로고침) */
+(function(){
+  try{
+    if(window.crossOriginIsolated){ sessionStorage.removeItem('coiTried'); return; }
+    if(!window.isSecureContext || !('serviceWorker' in navigator) || location.protocol==='file:') return;
+    navigator.serviceWorker.register('coi-serviceworker.js').then(function(){
+      return navigator.serviceWorker.ready;
+    }).then(function(){
+      if(!window.crossOriginIsolated && !sessionStorage.getItem('coiTried')){
+        sessionStorage.setItem('coiTried','1'); location.reload();
+      }
+    }).catch(function(){ /* 파일이 없으면 한 코어로 그대로 작동 */ });
+  }catch(e){}
+})();
+</script>
 <link rel="icon" href="data:image/webp;base64,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">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -163,21 +179,18 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
 .search-wrap{flex:1;min-width:170px;position:relative}
 .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);width:16px;height:16px}
-.tools .search{width:100%;border:1px solid var(--line);border-radius:12px;padding:8px 12px 8px 36px;outline:0;background:#fff}
-.tools .search:focus{border-color:var(--green)}
+.search-wrap .search{width:100%;border:1px solid var(--line);border-radius:12px;padding:8px 12px 8px 36px;outline:0;background:#fff}
+.search-wrap .search:focus{border-color:var(--green)}
 .tools .btn{padding:8px 12px;font-size:13.5px}
 .toggle{font-size:13.5px;color:var(--muted);display:inline-flex;gap:5px;align-items:center;padding:0 6px}
 .toggle input{accent-color:var(--green)}
 .segs{max-height:62vh;overflow:auto;border-top:1px solid var(--line-2);padding-top:4px}
-.seg{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:10px 8px;border-radius:12px;transition:background .15s}
 .seg:hover{background:#FAF7EF}
 .seg.now{background:var(--sage)}
-.seg .ts{border:0;background:var(--sage);color:var(--green);font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600;border-radius:999px;padding:3px 0;align-self:start;margin-top:1px}
 .seg .ts:hover{background:var(--green);color:#fff}
 .seg.now .ts{background:var(--green);color:#fff}
 .seg .tx{outline:0;border-radius:8px;padding:1px 6px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;line-height:1.75}
 .seg .tx:focus{background:#FFF9E9;box-shadow:inset 0 0 0 1px var(--gold-l)}
-.segs.no-ts .seg{grid-template-columns:1fr}
 .segs.no-ts .ts{display:none}
 .placeholder{color:var(--faint);text-align:center;padding:46px 10px;font-size:14px}
 .placeholder::before{content:"";display:block;width:64px;height:28px;margin:0 auto 12px;opacity:.55;
@@ -212,6 +225,145 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
   .opts{grid-template-columns:1fr}
   .head .wave{display:none}.title-in{width:100%;font-size:25px}
 }
+
+/* ===== 추가 기능 ===== */
+.nav{margin:0 -4px 14px}
+.nav-item{width:100%;display:flex;align-items:center;gap:10px;border:0;background:transparent;color:#F6EFDD;padding:10px 12px;border-radius:12px;font-weight:600;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.06)}
+.nav-item.on{background:rgba(235,221,184,.16)}
+.nav-item span{flex:1}
+.nav-item em{font-style:normal;font-size:12px;color:var(--gold-l);background:rgba(235,221,184,.14);padding:1px 8px;border-radius:99px}
+.nav-item em:empty{display:none}
+.dur{font-size:13px;color:var(--muted);background:var(--bg);border-radius:99px;padding:3px 10px}
+.dur:empty{display:none}
+
+/* 전체 노트 */
+.list-view{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:24px 26px;min-height:70vh}
+.lv-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.lv-head h2{font-family:var(--serif);color:var(--green-3);font-size:24px;margin:0 auto 0 0}
+.lv-search{flex:0 1 360px}
+.lv-row{display:grid;grid-template-columns:40px minmax(0,1fr) 150px 70px 34px;gap:14px;align-items:center;padding:14px 10px;border-bottom:1px solid var(--line-2);cursor:pointer;border-radius:12px}
+.lv-row:hover{background:#FAF7EF}
+.lv-row .ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--sage);color:var(--green)}
+.lv-row .ic svg{width:17px;height:17px}
+.lv-row b{display:block;font-size:15px;color:var(--green-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-row p{margin:2px 0 0;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lv-row .d{font-size:13.5px;color:var(--ink)}
+.lv-row .m{font-size:13.5px;color:var(--ink);text-align:right}
+.lv-row .del{border:0;background:none;color:var(--faint);border-radius:8px;padding:4px;visibility:hidden}
+.lv-row:hover .del{visibility:visible}.lv-row .del:hover{color:var(--danger)}
+.lv-cap{display:grid;grid-template-columns:40px minmax(0,1fr) 150px 70px 34px;gap:14px;padding:0 10px 8px;font-size:12px;color:var(--faint);border-bottom:1px solid var(--line)}
+.lv-cap span:nth-child(4){text-align:right}
+.lv-empty{text-align:center;color:var(--faint);padding:60px 10px}
+mark{background:#F6E7B8;color:inherit;border-radius:3px;padding:0 1px}
+
+/* 키워드 */
+.kw{display:flex;gap:12px;align-items:flex-start;margin:-4px 0 14px}
+.kw-l{font-size:13px;font-weight:700;color:var(--green-3);white-space:nowrap;padding-top:5px}
+.kw-list{display:flex;flex-wrap:wrap;gap:6px}
+.kw-list button{border:0;background:var(--sage);color:var(--green);border-radius:99px;padding:4px 12px;font-size:13px}
+.kw-list button:hover,.kw-list button.on{background:var(--green);color:#fff}
+
+/* 다운로드 메뉴 */
+.dd{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px -10px rgba(0,0,0,.25);padding:6px;min-width:180px;display:none;z-index:30}
+.menu.show{display:block}
+.menu button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 12px;border-radius:8px;font-size:14px}
+.menu button:hover{background:var(--sage)}
+
+/* 화자 표시 */
+.seg{display:block;position:relative;padding:4px 8px 4px 56px}
+.seg.first{margin-top:12px;padding-top:6px}
+.who{display:flex;align-items:center;gap:8px;margin:0 0 3px -46px}
+.badge{width:32px;height:32px;border-radius:50%;border:0;color:#fff;font-weight:700;font-size:14px;flex:none}
+.who .nm{border:0;background:none;font-weight:700;padding:0;color:var(--ink);font-size:14.5px}
+.who .nm:hover{text-decoration:underline}
+.who .ts{margin:0}
+.seg .ts{border:0;background:var(--sage);color:var(--green);font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px}
+.seg .side-ts{position:absolute;left:0;top:7px;opacity:0;transition:.15s;font-size:11px;padding:1px 6px}
+.seg:hover .side-ts{opacity:1}
+.seg .swap{position:absolute;right:6px;top:6px;border:0;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11.5px;color:var(--muted);padding:1px 7px;opacity:0}
+.seg:hover .swap{opacity:1}
+.segs.no-ts .ts{display:none}
+.sp-menu{position:fixed;z-index:60;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px -12px rgba(0,0,0,.3);padding:8px;width:230px}
+.sp-menu .opt-sp{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:7px 8px;border-radius:9px;text-align:left}
+.sp-menu .opt-sp:hover{background:var(--sage)}
+.sp-menu .opt-sp i{width:22px;height:22px;border-radius:50%;color:#fff;font-style:normal;font-size:11.5px;font-weight:700;display:grid;place-items:center}
+.sp-menu label{display:flex;gap:6px;font-size:12.5px;color:var(--muted);padding:8px 8px 2px;border-top:1px solid var(--line-2);margin-top:4px}
+.sp-menu small{display:block;font-size:11.5px;color:var(--faint);padding:2px 8px 4px}
+
+/* 요약/메모 탭 */
+.tabs{display:flex;gap:18px;border-bottom:1px solid var(--line);margin:-4px 0 16px}
+.tabs button{border:0;background:none;padding:6px 2px 10px;font-size:16px;font-family:var(--serif);font-weight:700;color:var(--faint);border-bottom:2.5px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--green-3);border-bottom-color:var(--green)}
+.sum-box{display:flex;gap:10px;align-items:center;border:1.5px solid var(--green);border-radius:14px;padding:12px 14px;background:linear-gradient(180deg,#FBFDFB,#F2F7F3)}
+.sum-box span{flex:1;font-size:13.5px;line-height:1.45}
+.sum-box small{display:block;color:var(--muted);font-size:11.5px;margin-top:3px}
+.sum-box .spark{width:15px;height:15px;color:var(--gold);vertical-align:-2px}
+.sum-out{margin-top:14px;font-size:14px;line-height:1.75}
+.sum-out h4{font-family:var(--serif);color:var(--green-3);font-size:15px;margin:14px 0 4px}
+.sum-out ul{margin:0;padding-left:18px}
+.sum-out li{margin:3px 0}
+.sum-out p{margin:4px 0}
+.sum-out .tsl{border:0;background:var(--sage);color:var(--green);font-size:11.5px;border-radius:99px;padding:0 7px;margin-right:6px}
+.sum-out .note{font-size:12px;color:var(--faint);margin-top:10px}
+
+/* 아래 재생 막대 */
+.pbar{position:sticky;bottom:12px;z-index:20;margin-top:22px;display:flex;align-items:center;gap:16px;padding:10px 22px;background:rgba(255,253,249,.94);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 32px -12px rgba(44,70,54,.35)}
+.pt{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:56px}
+.pt:last-child{text-align:right}
+.pmid{flex:1;min-width:0}
+.pmid input[type=range]{width:100%;accent-color:var(--green);height:4px;margin:2px 0 6px}
+.pctrl{display:flex;align-items:center;justify-content:center;gap:22px}
+.pbtn{border:0;background:none;position:relative;color:var(--ink);display:grid;place-items:center;width:34px;height:34px;border-radius:50%}
+.pbtn:hover{background:var(--sage)}
+.pbtn svg{width:24px;height:24px}
+.pbtn small{position:absolute;font-size:9px;font-weight:700;top:12px}
+.pplay{border:0;width:42px;height:42px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center}
+.pplay svg{width:20px;height:20px;fill:#fff}
+.pspeed{border:1px solid var(--line);background:#fff;border-radius:99px;font-size:12.5px;font-weight:600;padding:3px 10px;min-width:44px}
+
+/* 다운로드 창 */
+.modal{position:fixed;inset:0;background:rgba(31,52,40,.42);backdrop-filter:blur(2px);display:grid;place-items:center;z-index:70;padding:16px}
+.modal[hidden]{display:none}
+.dialog{background:#fff;border-radius:22px;padding:28px 32px 24px;width:min(560px,100%);box-shadow:0 30px 70px -20px rgba(0,0,0,.4);animation:rise .25s ease}
+.dialog h3{margin:0 0 20px;font-size:19px;font-family:var(--serif);color:var(--green-3)}
+.fmts{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.fmt-opt{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:15px}
+.fmt-opt input{accent-color:var(--green);width:18px;height:18px;margin:0}
+.fmt-opt i{width:28px;height:28px;border-radius:7px;color:#fff;font-style:normal;font-weight:700;font-size:13px;display:grid;place-items:center}
+.fmt-opt.off{opacity:.35;pointer-events:none}
+.incl{margin-top:22px;background:var(--bg);border-radius:14px;padding:14px 18px;display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.incl b{width:100%;font-size:14px}
+.incl label{display:flex;gap:6px;align-items:center;font-size:14.5px}
+.incl input{accent-color:var(--green);width:17px;height:17px}
+.incl label.off{opacity:.35;pointer-events:none}
+.dlg-btns{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}
+.dlg-btns .btn:first-child{background:none;color:var(--muted)}
+
+/* 변환 완료 알림 */
+.done{position:fixed;right:24px;bottom:24px;z-index:65;display:flex;align-items:center;gap:10px;background:var(--green);color:#FFF8E7;padding:13px 16px 13px 18px;border-radius:14px;box-shadow:0 14px 34px -10px rgba(0,0,0,.4);cursor:pointer;font-weight:600;animation:rise .3s ease}
+.done[hidden]{display:none}
+.done svg{width:20px;height:20px;color:var(--gold-l)}
+.done .x{border:0;background:none;color:rgba(255,248,231,.7);margin-left:16px}
+@media (max-width:860px){.lv-row,.lv-cap{grid-template-columns:36px minmax(0,1fr) 60px}.lv-row .d,.lv-cap span:nth-child(3),.lv-row .del,.lv-cap span:nth-child(5){display:none}.fmts{grid-template-columns:1fr}.pctrl{gap:10px}}
+
+/* 파일 들어감 표시 */
+.drop-over-msg{display:none}
+.drop.over .drop-over-msg{display:flex;position:absolute;inset:0;border-radius:16px;z-index:2;align-items:center;justify-content:center;gap:10px;
+  background:rgba(228,236,228,.94);color:var(--green-3);font-weight:700;font-size:17px;border:2px dashed var(--green)}
+.drop-over-msg svg{width:26px;height:26px}
+.drop-done,.drop-tip{display:none}
+.drop.has-file{border-style:solid;border-color:var(--green);background:linear-gradient(180deg,#F5FAF5,#ECF3ED)}
+.drop.has-file .drop-intro{display:none}
+.drop.has-file .drop-done{display:flex;align-items:center;gap:14px;justify-content:center;text-align:left;margin-bottom:6px;animation:rise .35s ease}
+.drop.has-file .drop-tip{display:block;font-size:12.8px;color:var(--muted);margin:4px 0 14px}
+.drop.has-file .drop-tip b{font-size:12.8px;color:var(--green)}
+.drop-done .ok{width:48px;height:48px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 0 0 7px rgba(44,70,54,.10)}
+.drop-done .ok svg{width:24px;height:24px;stroke-width:2.6}
+.dd-txt small{display:block;font-size:12.5px;font-weight:700;color:var(--green);letter-spacing:.3px}
+.dd-txt b{display:block;font-size:16.5px;color:var(--green-3);word-break:break-all}
+.dd-txt span{font-size:13px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -228,6 +380,14 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></symbol>
+  <symbol id="i-fwd" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6h16v13H4zM4 10h16"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 24 24"><path d="M8 4v16M4 8l4-4 4 4M16 20V4M12 16l4 4 4-4"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4"/></symbol>
 </svg>
 <div class="app">
   <!-- 사이드바 -->
@@ -240,7 +400,10 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
       <button class="btn btn-gold" id="sideRec"><svg class="i"><use href="#i-mic"/></svg>녹음하기</button>
       <button class="btn btn-line" id="newNote"><svg class="i"><use href="#i-plus"/></svg>새 노트</button>
     </div>
-    <h4><span>저장된 노트</span><span id="noteCount"></span></h4>
+    <nav class="nav">
+      <button class="nav-item" id="navAll"><svg class="i"><use href="#i-list"/></svg><span>전체 노트</span><em id="noteCount"></em></button>
+    </nav>
+    <h4><span>최근 노트</span></h4>
     <div class="notes" id="notes"></div>
     <div class="side-foot">
       <div><span>처리 장치</span><em id="devLabel">확인 중…</em></div>
@@ -251,6 +414,19 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 
   <!-- 본문 -->
   <main class="main">
+    <div id="listView" class="list-view" hidden>
+      <div class="lv-head">
+        <h2>전체 노트</h2>
+        <div class="search-wrap lv-search"><svg class="i"><use href="#i-search"/></svg><input class="search" id="allSearch" placeholder="전체 노트 검색 (제목·내용·메모)"></div>
+        <select class="sel" id="sortSel">
+          <option value="new">최신순</option><option value="old">오래된순</option>
+          <option value="long">긴 녹음순</option><option value="title">제목순</option>
+        </select>
+      </div>
+      <div class="lv-table" id="lvTable"></div>
+    </div>
+
+    <div id="editorView">
     <section class="head">
       <svg class="wave" viewBox="0 0 220 96" aria-hidden="true">
         <g stroke-linecap="round" stroke-width="5">
@@ -265,7 +441,7 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
       <div class="eyebrow">VOICE NOTE</div>
       <input class="title-in" id="title" placeholder="새로운 노트" maxlength="80">
       <div class="meta">
-        <div class="f"><label><svg class="i"><use href="#i-cal"/></svg>날짜</label><input type="date" id="date"></div>
+        <div class="f"><label><svg class="i"><use href="#i-cal"/></svg>날짜</label><input type="date" id="date"><span class="dur" id="durLabel"></span></div>
         <div class="f"><label><svg class="i"><use href="#i-user"/></svg>참석자</label>
           <div class="chips" id="chips"><input class="chip-add" id="chipIn" placeholder="＋ 이름 쓰고 Enter"></div></div>
       </div>
@@ -277,10 +453,22 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
           <h3><span class="ic"><svg class="i"><use href="#i-wave"/></svg></span>음성 기록 <span class="sub">음성·동영상 파일을 텍스트로</span></h3>
 
           <div class="drop" id="drop">
+            <div class="drop-over-msg"><svg class="i"><use href="#i-down"/></svg>여기에 놓으면 파일이 들어가요</div>
+            <div class="drop-intro">
             <div class="big"><svg class="i"><use href="#i-wave"/></svg></div>
             <b>녹음하거나 파일을 올려 음성 기록을 만들어 보세요</b>
             <p>인식 언어를 고른 뒤 ‘파일 첨부’를 누르거나 이곳에 끌어다 놓으세요.<br>
               <span class="fmt">음성 m4a · mp3 · aac · amr · wav · ogg · webm &nbsp;|&nbsp; 동영상 mp4 · mov · webm</span></p>
+            </div>
+            <div class="drop-done">
+              <div class="ok"><svg class="i"><use href="#i-check"/></svg></div>
+              <div class="dd-txt">
+                <small>파일이 들어갔어요</small>
+                <b id="dropName">-</b>
+                <span id="dropMeta">-</span>
+              </div>
+            </div>
+            <p class="drop-tip" id="dropTip">다른 파일로 바꾸려면 새 파일을 끌어다 놓거나 ‘파일 첨부’를 누르세요. 아래 <b>‘텍스트로 변환’</b>을 누르면 시작돼요.</p>
             <div class="drop-row">
               <select class="sel" id="lang">
                 <option value="ko">한국어</option>
@@ -351,21 +539,37 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
 
         <section class="card result">
           <h3><span class="ic"><svg class="i"><use href="#i-text"/></svg></span>변환 결과 <span class="stat" id="stat"></span></h3>
+          <div class="kw" id="kwBox" hidden><span class="kw-l">주요 키워드</span><div class="kw-list" id="kwList"></div></div>
           <div class="tools">
             <div class="search-wrap"><svg class="i"><use href="#i-search"/></svg><input class="search" id="search" placeholder="결과에서 찾기"></div>
             <label class="toggle"><input type="checkbox" id="tsToggle" checked> 시간 표시</label>
             <button class="btn btn-ghost" id="copyBtn"><svg class="i"><use href="#i-copy"/></svg>복사</button>
-            <button class="btn btn-ghost" id="txtBtn"><svg class="i"><use href="#i-down"/></svg>TXT</button>
-            <button class="btn btn-ghost" id="srtBtn"><svg class="i"><use href="#i-down"/></svg>자막(SRT)</button>
+            <div class="dd">
+              <button class="btn btn-green" id="dlBtn"><svg class="i"><use href="#i-down"/></svg>다운로드 ▾</button>
+              <div class="menu" id="dlMenu">
+                <button data-dl="record">음성 기록 다운로드</button>
+                <button data-dl="audio">음성 파일 다운로드</button>
+                <button data-dl="summary">요약·메모 다운로드</button>
+              </div>
+            </div>
           </div>
           <div class="segs" id="segs"><div class="placeholder">변환된 글이 여기에 나타나요. 글은 바로 고칠 수 있고, 시간을 누르면 그 부분이 재생돼요.</div></div>
         </section>
       </div>
 
       <aside class="card memo">
-        <h3><span class="ic"><svg class="i"><use href="#i-pen"/></svg></span>메모</h3>
+        <div class="tabs"><button class="on" data-tab="sum">요약</button><button data-tab="memo">메모</button></div>
+        <div class="pane" id="paneSum">
+          <div class="sum-box">
+            <span><b>AI가 요약한 핵심 내용을 확인해 보세요</b> <svg class="i spark"><use href="#i-spark"/></svg><small>API 키가 없으면 핵심 문장을 골라 보여 드려요.</small></span>
+            <button class="btn btn-green" id="sumBtn">요약</button>
+          </div>
+          <div class="sum-out" id="sumOut"></div>
+        </div>
+        <div class="pane" id="paneMemo" hidden>
         <textarea id="memo" placeholder="메모를 작성해 보세요.&#10;오늘 함께 읽은 부분, 나눈 질문, 다음 모임 준비…"></textarea>
         <div class="saved" id="memoSaved"></div>
+        </div>
         <ul class="guide">
           <li><b>처음 쓸 때</b> 음성 모델을 한 번 내려받아요(몇 분).</li>
           <li><b>긴 녹음</b>은 크롬·엣지 최신 버전에서 더 빨라요.</li>
@@ -374,9 +578,52 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
         </ul>
       </aside>
     </div>
+
+    <div class="pbar" id="pbar" hidden>
+      <span class="pt" id="pCur">00:00</span>
+      <div class="pmid">
+        <input type="range" id="pSeek" min="0" max="1000" value="0">
+        <div class="pctrl">
+          <button class="pspeed" id="pSpeed">1x</button>
+          <button class="pbtn" id="pBack" title="5초 뒤로"><svg class="i"><use href="#i-back"/></svg><small>5</small></button>
+          <button class="pplay" id="pPlay" title="재생/멈춤"><svg class="i"><use href="#i-play"/></svg></button>
+          <button class="pbtn" id="pFwd" title="5초 앞으로"><svg class="i"><use href="#i-fwd"/></svg><small>5</small></button>
+          <span style="width:44px"></span>
+        </div>
+      </div>
+      <span class="pt" id="pDur">00:00</span>
+    </div>
+    </div>
   </main>
 </div>
 <div class="toast" id="toast"></div>
+
+<div class="done" id="doneCard" hidden>
+  <svg class="i"><use href="#i-check"/></svg><span id="doneText">1개 파일 변환 완료</span>
+  <button class="x" id="doneX" title="닫기">✕</button>
+</div>
+
+<div class="sp-menu" id="spMenu" hidden></div>
+
+<div class="modal" id="dlModal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true">
+    <h3 id="dlTitle">음성 기록을 다운로드할까요?</h3>
+    <div class="fmts" id="fmts">
+      <label class="fmt-opt"><input type="radio" name="fmt" value="txt" checked><i style="background:#E59A8E">T</i>텍스트 문서(.txt)</label>
+      <label class="fmt-opt"><input type="radio" name="fmt" value="hwpx"><i style="background:#6FA0E8">ㅎ</i>한글 문서(.hwpx)</label>
+      <label class="fmt-opt"><input type="radio" name="fmt" value="docx"><i style="background:#4F6BC9">W</i>Word 문서(.docx)</label>
+      <label class="fmt-opt"><input type="radio" name="fmt" value="xlsx"><i style="background:#3F8A5A">X</i>Excel 문서(.xlsx)</label>
+      <label class="fmt-opt"><input type="radio" name="fmt" value="srt"><i style="background:#D98352">S</i>SRT 자막(.srt)</label>
+    </div>
+    <div class="incl" id="incl">
+      <b>포함 정보</b>
+      <label><input type="checkbox" id="incTs" checked> 시간 기록</label>
+      <label><input type="checkbox" id="incSp" checked> 참석자</label>
+      <label><input type="checkbox" id="incMemo"> 메모</label>
+    </div>
+    <div class="dlg-btns"><button class="btn" id="dlCancel">취소</button><button class="btn btn-green" id="dlGo">다운로드</button></div>
+  </div>
+</div>
 
 <script>
 /* =========================================================
@@ -386,6 +633,8 @@ svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-widt
    ========================================================= */
 const $ = (id) => document.getElementById(id);
 const SR = 16000;
+const THREADS = (self.crossOriginIsolated ? Math.max(2, Math.min(8, (navigator.hardwareConcurrency||4) - 1)) : 1);
+const HWPX_TPL = {"version": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><hv:HCFVersion xmlns:hv=\"http://www.hancom.co.kr/hwpml/2011/version\" tagetApplication=\"WORDPROCESSOR\" major=\"5\" minor=\"1\" micro=\"1\" buildNumber=\"0\" os=\"1\" xmlVersion=\"1.5\" application=\"Hancom Office Hangul\" appVersion=\"13, 0, 0, 1408 WIN32LEWindows_10\"/>", "settings": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><ha:HWPApplicationSetting xmlns:ha=\"http://www.hancom.co.kr/hwpml/2011/app\" xmlns:config=\"urn:oasis:names:tc:opendocument:xmlns:config:1.0\"><ha:CaretPosition listIDRef=\"0\" paraIDRef=\"0\" pos=\"16\"/><\/ha:HWPApplicationSetting>", "container": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><ocf:container xmlns:ocf=\"urn:oasis:names:tc:opendocument:xmlns:container\" xmlns:hpf=\"http://www.hancom.co.kr/schema/2011/hpf\"><ocf:rootfiles><ocf:rootfile full-path=\"Contents/content.hpf\" media-type=\"application/hwpml-package+xml\"/><ocf:rootfile full-path=\"Preview/PrvText.txt\" media-type=\"text/plain\"/><ocf:rootfile full-path=\"META-INF/container.rdf\" media-type=\"application/rdf+xml\"/><\/ocf:rootfiles><\/ocf:container>", "rdf": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"\"><ns0:hasPart xmlns:ns0=\"http://www.hancom.co.kr/hwpml/2016/meta/pkg#\" rdf:resource=\"Contents/header.xml\"/><\/rdf:Description><rdf:Description rdf:about=\"Contents/header.xml\"><rdf:type rdf:resource=\"http://www.hancom.co.kr/hwpml/2016/meta/pkg#HeaderFile\"/><\/rdf:Description><rdf:Description rdf:about=\"\"><ns0:hasPart xmlns:ns0=\"http://www.hancom.co.kr/hwpml/2016/meta/pkg#\" rdf:resource=\"Contents/section0.xml\"/><\/rdf:Description><rdf:Description rdf:about=\"Contents/section0.xml\"><rdf:type rdf:resource=\"http://www.hancom.co.kr/hwpml/2016/meta/pkg#SectionFile\"/><\/rdf:Description><rdf:Description rdf:about=\"\"><rdf:type rdf:resource=\"http://www.hancom.co.kr/hwpml/2016/meta/pkg#Document\"/><\/rdf:Description><\/rdf:RDF>", "manifest": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><odf:manifest xmlns:odf=\"urn:oasis:names:tc:opendocument:xmlns:manifest:1.0\"/>", "hpf": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><opf:package xmlns:ha=\"http://www.hancom.co.kr/hwpml/2011/app\" xmlns:hp=\"http://www.hancom.co.kr/hwpml/2011/paragraph\" xmlns:hp10=\"http://www.hancom.co.kr/hwpml/2016/paragraph\" xmlns:hs=\"http://www.hancom.co.kr/hwpml/2011/section\" xmlns:hc=\"http://www.hancom.co.kr/hwpml/2011/core\" xmlns:hh=\"http://www.hancom.co.kr/hwpml/2011/head\" xmlns:hhs=\"http://www.hancom.co.kr/hwpml/2011/history\" xmlns:hm=\"http://www.hancom.co.kr/hwpml/2011/master-page\" xmlns:hpf=\"http://www.hancom.co.kr/schema/2011/hpf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:opf=\"http://www.idpf.org/2007/opf/\" xmlns:ooxmlchart=\"http://www.hancom.co.kr/hwpml/2016/ooxmlchart\" xmlns:hwpunitchar=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xmlns:config=\"urn:oasis:names:tc:opendocument:xmlns:config:1.0\" version=\"\" unique-identifier=\"\" id=\"\"><opf:metadata><opf:title>{{TITLE}}<\/opf:title><opf:language>ko<\/opf:language><opf:meta name=\"creator\" content=\"text\">울랄라 음성노트<\/opf:meta><opf:meta name=\"subject\" content=\"text\"/><opf:meta name=\"description\" content=\"text\"/><opf:meta name=\"lastsaveby\" content=\"text\">울랄라 음성노트<\/opf:meta><opf:meta name=\"keyword\" content=\"text\"/><\/opf:metadata><opf:manifest><opf:item id=\"header\" href=\"Contents/header.xml\" media-type=\"application/xml\"/><opf:item id=\"section0\" href=\"Contents/section0.xml\" media-type=\"application/xml\"/><opf:item id=\"settings\" href=\"settings.xml\" media-type=\"application/xml\"/><\/opf:manifest><opf:spine><opf:itemref idref=\"header\" linear=\"yes\"/><opf:itemref idref=\"section0\" linear=\"yes\"/><\/opf:spine><\/opf:package>", "header": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><hh:head xmlns:ha=\"http://www.hancom.co.kr/hwpml/2011/app\" xmlns:hp=\"http://www.hancom.co.kr/hwpml/2011/paragraph\" xmlns:hp10=\"http://www.hancom.co.kr/hwpml/2016/paragraph\" xmlns:hs=\"http://www.hancom.co.kr/hwpml/2011/section\" xmlns:hc=\"http://www.hancom.co.kr/hwpml/2011/core\" xmlns:hh=\"http://www.hancom.co.kr/hwpml/2011/head\" xmlns:hhs=\"http://www.hancom.co.kr/hwpml/2011/history\" xmlns:hm=\"http://www.hancom.co.kr/hwpml/2011/master-page\" xmlns:hpf=\"http://www.hancom.co.kr/schema/2011/hpf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:opf=\"http://www.idpf.org/2007/opf/\" xmlns:ooxmlchart=\"http://www.hancom.co.kr/hwpml/2016/ooxmlchart\" xmlns:hwpunitchar=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xmlns:config=\"urn:oasis:names:tc:opendocument:xmlns:config:1.0\" version=\"1.5\" secCnt=\"1\"><hh:beginNum page=\"1\" footnote=\"1\" endnote=\"1\" pic=\"1\" tbl=\"1\" equation=\"1\"/><hh:refList><hh:fontfaces itemCnt=\"7\"><hh:fontface lang=\"HANGUL\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"LATIN\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"HANJA\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"JAPANESE\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"OTHER\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"SYMBOL\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><hh:fontface lang=\"USER\" fontCnt=\"2\"><hh:font id=\"0\" face=\"함초롬돋움\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><hh:font id=\"1\" face=\"함초롬바탕\" type=\"TTF\" isEmbedded=\"0\"><hh:typeInfo familyType=\"FCAT_GOTHIC\" weight=\"6\" proportion=\"4\" contrast=\"0\" strokeVariation=\"1\" armStyle=\"1\" letterform=\"1\" midline=\"1\" xHeight=\"1\"/><\/hh:font><\/hh:fontface><\/hh:fontfaces><hh:borderFills itemCnt=\"2\"><hh:borderFill id=\"1\" threeD=\"0\" shadow=\"0\" centerLine=\"NONE\" breakCellSeparateLine=\"0\"><hh:slash type=\"NONE\" Crooked=\"0\" isCounter=\"0\"/><hh:backSlash type=\"NONE\" Crooked=\"0\" isCounter=\"0\"/><hh:leftBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:rightBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:topBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:bottomBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:diagonal type=\"SOLID\" width=\"0.1 mm\" color=\"#000000\"/><\/hh:borderFill><hh:borderFill id=\"2\" threeD=\"0\" shadow=\"0\" centerLine=\"NONE\" breakCellSeparateLine=\"0\"><hh:slash type=\"NONE\" Crooked=\"0\" isCounter=\"0\"/><hh:backSlash type=\"NONE\" Crooked=\"0\" isCounter=\"0\"/><hh:leftBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:rightBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:topBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:bottomBorder type=\"NONE\" width=\"0.1 mm\" color=\"#000000\"/><hh:diagonal type=\"SOLID\" width=\"0.1 mm\" color=\"#000000\"/><hc:fillBrush><hc:winBrush faceColor=\"none\" hatchColor=\"#999999\" alpha=\"0\"/><\/hc:fillBrush><\/hh:borderFill><\/hh:borderFills><hh:charProperties itemCnt=\"11\"><hh:charPr id=\"0\" height=\"1000\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"1\" height=\"1000\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"2\" height=\"900\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"3\" height=\"900\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"4\" height=\"900\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"-5\" latin=\"-5\" hanja=\"-5\" japanese=\"-5\" other=\"-5\" symbol=\"-5\" user=\"-5\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"5\" height=\"1600\" textColor=\"#2E74B5\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"6\" height=\"1100\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"7\" height=\"1500\" textColor=\"#1F3428\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:bold/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"8\" height=\"1000\" textColor=\"#2C4636\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:bold/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"9\" height=\"900\" textColor=\"#808080\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><hh:charPr id=\"10\" height=\"1100\" textColor=\"#000000\" shadeColor=\"none\" useFontSpace=\"0\" useKerning=\"0\" symMark=\"NONE\" borderFillIDRef=\"2\"><hh:fontRef hangul=\"1\" latin=\"1\" hanja=\"1\" japanese=\"1\" other=\"1\" symbol=\"1\" user=\"1\"/><hh:ratio hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:spacing hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:relSz hangul=\"100\" latin=\"100\" hanja=\"100\" japanese=\"100\" other=\"100\" symbol=\"100\" user=\"100\"/><hh:offset hangul=\"0\" latin=\"0\" hanja=\"0\" japanese=\"0\" other=\"0\" symbol=\"0\" user=\"0\"/><hh:bold/><hh:underline type=\"NONE\" shape=\"SOLID\" color=\"#000000\"/><hh:strikeout shape=\"NONE\" color=\"#000000\"/><hh:outline type=\"NONE\"/><hh:shadow type=\"NONE\" color=\"#C0C0C0\" offsetX=\"10\" offsetY=\"10\"/><\/hh:charPr><\/hh:charProperties><hh:tabProperties itemCnt=\"3\"><hh:tabPr id=\"0\" autoTabLeft=\"0\" autoTabRight=\"0\"/><hh:tabPr id=\"1\" autoTabLeft=\"1\" autoTabRight=\"0\"/><hh:tabPr id=\"2\" autoTabLeft=\"0\" autoTabRight=\"1\"/><\/hh:tabProperties><hh:numberings itemCnt=\"1\"><hh:numbering id=\"1\" start=\"0\"><hh:paraHead start=\"1\" level=\"1\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"DIGIT\" charPrIDRef=\"4294967295\" checkable=\"0\">^1.<\/hh:paraHead><hh:paraHead start=\"1\" level=\"2\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"HANGUL_SYLLABLE\" charPrIDRef=\"4294967295\" checkable=\"0\">^2.<\/hh:paraHead><hh:paraHead start=\"1\" level=\"3\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"DIGIT\" charPrIDRef=\"4294967295\" checkable=\"0\">^3)<\/hh:paraHead><hh:paraHead start=\"1\" level=\"4\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"HANGUL_SYLLABLE\" charPrIDRef=\"4294967295\" checkable=\"0\">^4)<\/hh:paraHead><hh:paraHead start=\"1\" level=\"5\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"DIGIT\" charPrIDRef=\"4294967295\" checkable=\"0\">(^5)<\/hh:paraHead><hh:paraHead start=\"1\" level=\"6\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"HANGUL_SYLLABLE\" charPrIDRef=\"4294967295\" checkable=\"0\">(^6)<\/hh:paraHead><hh:paraHead start=\"1\" level=\"7\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"CIRCLED_DIGIT\" charPrIDRef=\"4294967295\" checkable=\"1\">^7<\/hh:paraHead><hh:paraHead start=\"1\" level=\"8\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"CIRCLED_HANGUL_SYLLABLE\" charPrIDRef=\"4294967295\" checkable=\"1\">^8<\/hh:paraHead><hh:paraHead start=\"1\" level=\"9\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"HANGUL_JAMO\" charPrIDRef=\"4294967295\" checkable=\"0\"/><hh:paraHead start=\"1\" level=\"10\" align=\"LEFT\" useInstWidth=\"1\" autoIndent=\"1\" widthAdjust=\"0\" textOffsetType=\"PERCENT\" textOffset=\"50\" numFormat=\"ROMAN_SMALL\" charPrIDRef=\"4294967295\" checkable=\"1\"/><\/hh:numbering><\/hh:numberings><hh:paraProperties itemCnt=\"20\"><hh:paraPr id=\"0\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"1\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"1500\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"3000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"2\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"1000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"2000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"3\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"1\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"2000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"4000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"4\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"2\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"3000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"6000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"5\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"3\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"4000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"8000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"6\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"4\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"5000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"10000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"7\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"5\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"6000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"12000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"8\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"6\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"7000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"14000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"9\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"150\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"150\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"10\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"-1310\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"130\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"-2620\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"130\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"11\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"LEFT\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"130\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"130\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"12\" tabPrIDRef=\"1\" condense=\"20\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"LEFT\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"1200\" unit=\"HWPUNIT\"/><hc:next value=\"300\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"2400\" unit=\"HWPUNIT\"/><hc:next value=\"600\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"13\" tabPrIDRef=\"2\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"LEFT\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"700\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"1400\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"14\" tabPrIDRef=\"2\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"LEFT\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"1100\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"700\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"2200\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"1400\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"15\" tabPrIDRef=\"2\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"LEFT\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"BREAK_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"2200\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"700\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"4400\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"1400\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"16\" tabPrIDRef=\"1\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/paragraph\"><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"8\"/><\/hp:case><hp:default><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><\/hp:default><\/hp:switch><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"9000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"18000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"17\" tabPrIDRef=\"1\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/paragraph\"><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"9\"/><\/hp:case><hp:default><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><\/hp:default><\/hp:switch><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"10000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"20000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"18\" tabPrIDRef=\"1\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/paragraph\"><hh:heading type=\"OUTLINE\" idRef=\"0\" level=\"7\"/><\/hp:case><hp:default><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><\/hp:default><\/hp:switch><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"8000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"16000\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"0\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"160\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><hh:paraPr id=\"19\" tabPrIDRef=\"0\" condense=\"0\" fontLineHeight=\"0\" snapToGrid=\"1\" suppressLineNumbers=\"0\" checked=\"0\" textDir=\"LTR\"><hh:align horizontal=\"JUSTIFY\" vertical=\"BASELINE\"/><hh:heading type=\"NONE\" idRef=\"0\" level=\"0\"/><hh:breakSetting breakLatinWord=\"KEEP_WORD\" breakNonLatinWord=\"KEEP_WORD\" widowOrphan=\"0\" keepWithNext=\"0\" keepLines=\"0\" pageBreakBefore=\"0\" lineWrap=\"BREAK\"/><hh:autoSpacing eAsianEng=\"0\" eAsianNum=\"0\"/><hp:switch><hp:case hp:required-namespace=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\"><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"800\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"150\" unit=\"HWPUNIT\"/><\/hp:case><hp:default><hh:margin><hc:intent value=\"0\" unit=\"HWPUNIT\"/><hc:left value=\"0\" unit=\"HWPUNIT\"/><hc:right value=\"0\" unit=\"HWPUNIT\"/><hc:prev value=\"0\" unit=\"HWPUNIT\"/><hc:next value=\"1600\" unit=\"HWPUNIT\"/><\/hh:margin><hh:lineSpacing type=\"PERCENT\" value=\"150\" unit=\"HWPUNIT\"/><\/hp:default><\/hp:switch><hh:border borderFillIDRef=\"2\" offsetLeft=\"0\" offsetRight=\"0\" offsetTop=\"0\" offsetBottom=\"0\" connect=\"0\" ignoreMargin=\"0\"/><\/hh:paraPr><\/hh:paraProperties><hh:styles itemCnt=\"23\"><hh:style id=\"0\" type=\"PARA\" name=\"바탕글\" engName=\"Normal\" paraPrIDRef=\"0\" charPrIDRef=\"0\" nextStyleIDRef=\"0\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"1\" type=\"PARA\" name=\"본문\" engName=\"Body\" paraPrIDRef=\"1\" charPrIDRef=\"0\" nextStyleIDRef=\"1\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"2\" type=\"PARA\" name=\"개요 1\" engName=\"Outline 1\" paraPrIDRef=\"2\" charPrIDRef=\"0\" nextStyleIDRef=\"2\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"3\" type=\"PARA\" name=\"개요 2\" engName=\"Outline 2\" paraPrIDRef=\"3\" charPrIDRef=\"0\" nextStyleIDRef=\"3\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"4\" type=\"PARA\" name=\"개요 3\" engName=\"Outline 3\" paraPrIDRef=\"4\" charPrIDRef=\"0\" nextStyleIDRef=\"4\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"5\" type=\"PARA\" name=\"개요 4\" engName=\"Outline 4\" paraPrIDRef=\"5\" charPrIDRef=\"0\" nextStyleIDRef=\"5\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"6\" type=\"PARA\" name=\"개요 5\" engName=\"Outline 5\" paraPrIDRef=\"6\" charPrIDRef=\"0\" nextStyleIDRef=\"6\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"7\" type=\"PARA\" name=\"개요 6\" engName=\"Outline 6\" paraPrIDRef=\"7\" charPrIDRef=\"0\" nextStyleIDRef=\"7\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"8\" type=\"PARA\" name=\"개요 7\" engName=\"Outline 7\" paraPrIDRef=\"8\" charPrIDRef=\"0\" nextStyleIDRef=\"8\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"9\" type=\"PARA\" name=\"개요 8\" engName=\"Outline 8\" paraPrIDRef=\"18\" charPrIDRef=\"0\" nextStyleIDRef=\"9\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"10\" type=\"PARA\" name=\"개요 9\" engName=\"Outline 9\" paraPrIDRef=\"16\" charPrIDRef=\"0\" nextStyleIDRef=\"10\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"11\" type=\"PARA\" name=\"개요 10\" engName=\"Outline 10\" paraPrIDRef=\"17\" charPrIDRef=\"0\" nextStyleIDRef=\"11\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"12\" type=\"CHAR\" name=\"쪽 번호\" engName=\"Page Number\" paraPrIDRef=\"0\" charPrIDRef=\"1\" nextStyleIDRef=\"0\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"13\" type=\"CHAR\" name=\"줄 번호\" engName=\"Line Number\" paraPrIDRef=\"0\" charPrIDRef=\"0\" nextStyleIDRef=\"0\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"14\" type=\"PARA\" name=\"머리말\" engName=\"Header\" paraPrIDRef=\"9\" charPrIDRef=\"2\" nextStyleIDRef=\"14\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"15\" type=\"PARA\" name=\"각주\" engName=\"Footnote\" paraPrIDRef=\"10\" charPrIDRef=\"3\" nextStyleIDRef=\"15\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"16\" type=\"PARA\" name=\"미주\" engName=\"Endnote\" paraPrIDRef=\"10\" charPrIDRef=\"3\" nextStyleIDRef=\"16\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"17\" type=\"PARA\" name=\"메모\" engName=\"Memo\" paraPrIDRef=\"11\" charPrIDRef=\"4\" nextStyleIDRef=\"17\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"18\" type=\"PARA\" name=\"차례 제목\" engName=\"TOC Heading\" paraPrIDRef=\"12\" charPrIDRef=\"5\" nextStyleIDRef=\"18\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"19\" type=\"PARA\" name=\"차례 1\" engName=\"TOC 1\" paraPrIDRef=\"13\" charPrIDRef=\"6\" nextStyleIDRef=\"19\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"20\" type=\"PARA\" name=\"차례 2\" engName=\"TOC 2\" paraPrIDRef=\"14\" charPrIDRef=\"6\" nextStyleIDRef=\"20\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"21\" type=\"PARA\" name=\"차례 3\" engName=\"TOC 3\" paraPrIDRef=\"15\" charPrIDRef=\"6\" nextStyleIDRef=\"21\" langID=\"1042\" lockForm=\"0\"/><hh:style id=\"22\" type=\"PARA\" name=\"캡션\" engName=\"Caption\" paraPrIDRef=\"19\" charPrIDRef=\"0\" nextStyleIDRef=\"22\" langID=\"1042\" lockForm=\"0\"/><\/hh:styles><\/hh:refList><hh:compatibleDocument targetProgram=\"HWP201X\"><hh:layoutCompatibility/><\/hh:compatibleDocument><hh:docOption><hh:linkinfo path=\"\" pageInherit=\"0\" footnoteInherit=\"0\"/><\/hh:docOption><hh:metaTag>{\"name\":\"\"}<\/hh:metaTag><hh:trackchageConfig flags=\"56\"/><\/hh:head>", "secHead": "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n<hs:sec xmlns:ha=\"http://www.hancom.co.kr/hwpml/2011/app\" xmlns:hp=\"http://www.hancom.co.kr/hwpml/2011/paragraph\" xmlns:hp10=\"http://www.hancom.co.kr/hwpml/2016/paragraph\" xmlns:hs=\"http://www.hancom.co.kr/hwpml/2011/section\" xmlns:hc=\"http://www.hancom.co.kr/hwpml/2011/core\" xmlns:hh=\"http://www.hancom.co.kr/hwpml/2011/head\" xmlns:hhs=\"http://www.hancom.co.kr/hwpml/2011/history\" xmlns:hm=\"http://www.hancom.co.kr/hwpml/2011/master-page\" xmlns:hpf=\"http://www.hancom.co.kr/schema/2011/hpf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:opf=\"http://www.idpf.org/2007/opf/\" xmlns:ooxmlchart=\"http://www.hancom.co.kr/hwpml/2016/ooxmlchart\" xmlns:hwpunitchar=\"http://www.hancom.co.kr/hwpml/2016/HwpUnitChar\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xmlns:config=\"urn:oasis:names:tc:opendocument:xmlns:config:1.0\"><hp:p id=\"0\" paraPrIDRef=\"0\" styleIDRef=\"0\" pageBreak=\"0\" columnBreak=\"0\" merged=\"0\"><hp:run charPrIDRef=\"0\"><hp:secPr id=\"\" textDirection=\"HORIZONTAL\" spaceColumns=\"1134\" tabStop=\"8000\" tabStopVal=\"4000\" tabStopUnit=\"HWPUNIT\" outlineShapeIDRef=\"1\" memoShapeIDRef=\"0\" textVerticalWidthHead=\"0\" masterPageCnt=\"0\"><hp:grid lineGrid=\"0\" charGrid=\"0\" wonggojiFormat=\"0\"/><hp:startNum pageStartsOn=\"BOTH\" page=\"0\" pic=\"0\" tbl=\"0\" equation=\"0\"/><hp:visibility hideFirstHeader=\"0\" hideFirstFooter=\"0\" hideFirstMasterPage=\"0\" border=\"SHOW_ALL\" fill=\"SHOW_ALL\" hideFirstPageNum=\"0\" hideFirstEmptyLine=\"0\" showLineNumber=\"0\"/><hp:lineNumberShape restartType=\"0\" countBy=\"0\" distance=\"0\" startNumber=\"0\"/><hp:pagePr landscape=\"WIDELY\" width=\"59528\" height=\"84186\" gutterType=\"LEFT_ONLY\"><hp:margin header=\"4252\" footer=\"4252\" gutter=\"0\" left=\"8504\" right=\"8504\" top=\"5668\" bottom=\"4252\"/><\/hp:pagePr><hp:footNotePr><hp:autoNumFormat type=\"DIGIT\" userChar=\"\" prefixChar=\"\" suffixChar=\")\" supscript=\"0\"/><hp:noteLine length=\"-1\" type=\"SOLID\" width=\"0.12 mm\" color=\"#000000\"/><hp:noteSpacing betweenNotes=\"283\" belowLine=\"567\" aboveLine=\"850\"/><hp:numbering type=\"CONTINUOUS\" newNum=\"1\"/><hp:placement place=\"EACH_COLUMN\" beneathText=\"0\"/><\/hp:footNotePr><hp:endNotePr><hp:autoNumFormat type=\"DIGIT\" userChar=\"\" prefixChar=\"\" suffixChar=\")\" supscript=\"0\"/><hp:noteLine length=\"14692344\" type=\"SOLID\" width=\"0.12 mm\" color=\"#000000\"/><hp:noteSpacing betweenNotes=\"0\" belowLine=\"567\" aboveLine=\"850\"/><hp:numbering type=\"CONTINUOUS\" newNum=\"1\"/><hp:placement place=\"END_OF_DOCUMENT\" beneathText=\"0\"/><\/hp:endNotePr><hp:pageBorderFill type=\"BOTH\" borderFillIDRef=\"1\" textBorder=\"PAPER\" headerInside=\"0\" footerInside=\"0\" fillArea=\"PAPER\"><hp:offset left=\"1417\" right=\"1417\" top=\"1417\" bottom=\"1417\"/><\/hp:pageBorderFill><hp:pageBorderFill type=\"EVEN\" borderFillIDRef=\"1\" textBorder=\"PAPER\" headerInside=\"0\" footerInside=\"0\" fillArea=\"PAPER\"><hp:offset left=\"1417\" right=\"1417\" top=\"1417\" bottom=\"1417\"/><\/hp:pageBorderFill><hp:pageBorderFill type=\"ODD\" borderFillIDRef=\"1\" textBorder=\"PAPER\" headerInside=\"0\" footerInside=\"0\" fillArea=\"PAPER\"><hp:offset left=\"1417\" right=\"1417\" top=\"1417\" bottom=\"1417\"/><\/hp:pageBorderFill><\/hp:secPr><hp:ctrl><hp:colPr id=\"\" type=\"NEWSPAPER\" layout=\"LEFT\" colCount=\"1\" sameSz=\"1\" sameGap=\"0\"/><\/hp:ctrl><\/hp:run><hp:run charPrIDRef=\"7\"><hp:t>{{TITLE}}<\/hp:t><\/hp:run><hp:linesegarray><hp:lineseg textpos=\"0\" vertpos=\"0\" vertsize=\"1000\" textheight=\"1000\" baseline=\"850\" spacing=\"600\" horzpos=\"0\" horzsize=\"42520\" flags=\"393216\"/><\/hp:linesegarray><\/hp:p>", "png": "iVBORw0KGgoAAAANSUhEUgAAAtQAAAQACAIAAABOMFmkAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYcAAB2HAY/l8WUAABEaSURBVHhe7dahAQAwDICw/v906+eHSiQXMAsAEJo3AAD8ZD4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABS5gMASJkPACBlPgCAlPkAAFLmAwBImQ8AIGU+AICU+QAAUuYDAEiZDwAgZT4AgJT5AABSB/d3CzH9WllmAAAAAElFTkSuQmCC"};
 const TJS = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2';
 
 const MODELS = {
@@ -420,7 +669,7 @@ function saveNotes(arr){ try{ localStorage.setItem(STORE, JSON.stringify(arr)); 
 function currentNoteObj(){
   return { id:state.noteId, title:$('title').value.trim()||'새로운 노트', date:$('date').value,
     attendees:state.attendees, memo:$('memo').value, segments:state.segments,
-    fileName:state.file?state.file.name:(state.fileName||''), duration:state.duration, updated:Date.now() };
+    fileName:state.file?state.file.name:(state.fileName||''), duration:state.duration, summary:state.summary||null, updated:Date.now() };
 }
 function persist(){
   if(!state.noteId){
@@ -436,9 +685,9 @@ let saveTimer=null; function persistSoon(){ clearTimeout(saveTimer); saveTimer=s
 
 function renderNotes(){
   const arr=loadNotes(), box=$('notes'); box.innerHTML='';
-  $('noteCount').textContent=arr.length?arr.length+'개':'';
+  $('noteCount').textContent=arr.length?String(arr.length):'';
   if(!arr.length){ const d=document.createElement('div'); d.className='empty-notes'; d.textContent='아직 저장된 노트가 없어요.'; box.appendChild(d); return; }
-  arr.forEach(n=>{
+  arr.slice(0,8).forEach(n=>{
     const it=document.createElement('div'); it.className='note-item'+(n.id===state.noteId?' on':'');
     const t=document.createElement('div'); t.className='t';
     const b=document.createElement('b'); b.textContent=n.title||'새로운 노트';
@@ -447,7 +696,7 @@ function renderNotes(){
     const del=document.createElement('button'); del.className='del'; del.title='삭제'; del.textContent='✕';
     del.onclick=(e)=>{ e.stopPropagation(); if(!confirm(`‘${n.title}’ 노트를 지울까요?`)) return;
       saveNotes(loadNotes().filter(x=>x.id!==n.id)); if(n.id===state.noteId) resetNote(); else renderNotes(); };
-    it.onclick=()=>openNote(n.id);
+    it.onclick=()=>{ showList(false); openNote(n.id); };
     it.append(t,del); box.appendChild(it);
   });
 }
@@ -462,6 +711,7 @@ function openNote(id){
     $('fileMeta').textContent=(n.duration?fmtDur(n.duration)+' · ':'')+'원본 파일을 다시 첨부하면 재생할 수 있어요';
     $('fileIco').textContent=(n.fileName.split('.').pop()||'').toUpperCase().slice(0,4); $('runBtn').style.display='none'; }
   else $('fileCard').classList.remove('show');
+  state.summary=n.summary||null; renderSummary(); $('durLabel').textContent=n.duration?fmtDur(n.duration):''; $('pbar').hidden=true;
   renderSegs(); renderNotes(); $('memoSaved').textContent='';
 }
 function resetNote(){
@@ -469,6 +719,7 @@ function resetNote(){
   clearMedia(); state.noteId=null; state.segments=[]; state.duration=0; state.fileName='';
   $('title').value=''; $('date').value=today(); $('memo').value=''; state.attendees=[]; renderChips();
   $('fileCard').classList.remove('show'); $('prog').classList.remove('show'); $('search').value='';
+  state.summary=null; renderSummary(); $('durLabel').textContent=''; $('pbar').hidden=true;
   renderSegs(); renderNotes(); $('memoSaved').textContent='';
 }
 
@@ -483,6 +734,7 @@ function renderChips(){
     x.onclick=()=>{ state.attendees.splice(i,1); renderChips(); persistSoon(); };
     c.append(d,n,x); box.insertBefore(c,$('chipIn'));
   });
+  if(state.segments.length) renderSegs();
 }
 $('chipIn').addEventListener('keydown',e=>{
   if(e.key==='Enter' && !e.isComposing){ const v=e.target.value.trim(); if(v){ state.attendees.push(v); e.target.value=''; renderChips(); persistSoon(); } }
@@ -492,9 +744,16 @@ $('chipIn').addEventListener('keydown',e=>{
 function clearMedia(){
   if(state.mediaURL) URL.revokeObjectURL(state.mediaURL);
   state.mediaURL=null; state.file=null; $('mediaBox').innerHTML='';
+  $('drop').classList.remove('has-file');
+}
+function markDrop(file, dur){
+  $('drop').classList.add('has-file');
+  $('dropName').textContent=file.name;
+  $('dropMeta').textContent=(dur?fmtDur(dur)+' · ':'')+fmtSize(file.size)+(/^video|\.(mp4|mov|m4v)$/i.test(file.type||file.name)?' · 동영상(소리만 변환)':'');
 }
 function setFile(file){
   if(state.running){ toast('변환이 끝난 뒤 새 파일을 올려 주세요.'); return; }
+  showList(false);
   const ext=(file.name.split('.').pop()||'').toLowerCase();
   const isVideo=file.type.startsWith('video/')||['mp4','mov','m4v','mkv'].includes(ext);
   const isAudio=file.type.startsWith('audio/')||['m4a','mp3','aac','amr','wav','ogg','webm','flac','opus'].includes(ext);
@@ -502,12 +761,13 @@ function setFile(file){
   // 기존 결과가 있고 다른 노트라면 새 노트로 시작
   if(state.segments.length){ resetNote(); }
   clearMedia(); state.file=file; state.mediaURL=URL.createObjectURL(file);
-  const el=document.createElement(isVideo?'video':'audio'); el.controls=true; el.preload='metadata'; el.src=state.mediaURL; el.id='player';
-  el.addEventListener('loadedmetadata',()=>{ if(isFinite(el.duration)){ state.duration=el.duration; $('fileMeta').textContent=`${fmtDur(el.duration)} · ${fmtSize(file.size)}`; } });
-  el.addEventListener('timeupdate',highlightNow);
+  const el=document.createElement(isVideo?'video':'audio'); el.controls=false; if(!isVideo) el.style.display='none'; else el.onclick=()=>el.paused?el.play():el.pause(); el.preload='metadata'; el.src=state.mediaURL; el.id='player';
+  el.addEventListener('loadedmetadata',()=>{ if(isFinite(el.duration)){ state.duration=el.duration; markDrop(file, el.duration); $('durLabel').textContent=fmtDur(el.duration); $('fileMeta').textContent=`${fmtDur(el.duration)} · ${fmtSize(file.size)}`; } });
+  bindPlayer(el);
   $('mediaBox').appendChild(el);
   $('fileCard').classList.add('show'); $('runBtn').style.display=''; $('runBtn').disabled=false;
-  $('fileName').textContent=file.name; $('fileMeta').textContent=fmtSize(file.size);
+  $('fileName').textContent=file.name; $('fileMeta').textContent=fmtSize(file.size); markDrop(file,0);
+  toast('파일이 들어갔어요: '+file.name);
   $('fileIco').textContent=(ext||'FILE').toUpperCase().slice(0,4);
   if(!$('title').value.trim()) $('title').value=file.name.replace(/\.[^.]+$/,'');
   $('prog').classList.remove('show');
@@ -516,7 +776,8 @@ $('pickBtn').onclick=()=>$('fileIn').click();
 $('fileIn').onchange=e=>{ if(e.target.files[0]) setFile(e.target.files[0]); e.target.value=''; };
 const drop=$('drop');
 ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
+drop.addEventListener('dragleave',e=>{ if(!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('over');});
 drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) setFile(f); });
 window.addEventListener('dragover',e=>e.preventDefault()); window.addEventListener('drop',e=>e.preventDefault());
 
@@ -567,10 +828,12 @@ async function detectGPU(){
   try{
     if(navigator.gpu){ const ad=await navigator.gpu.requestAdapter(); if(ad){ state.gpu=true; state.f16=ad.features.has('shader-f16'); } }
   }catch(e){}
-  $('devLabel').textContent=state.gpu?'그래픽 가속(WebGPU)':'CPU';
+  $('devLabel').textContent=state.gpu?'그래픽 가속(WebGPU)':(THREADS>1?`CPU ${THREADS}코어`:'CPU 1코어');
   if(!state.gpu){
     const o=$('model').querySelector('option[value=turbo]'); o.disabled=true; o.textContent='정밀 (대형 터보 · 이 기기에서는 사용 불가)';
-    $('localHint').textContent='이 기기는 CPU로 변환해요. 1시간 녹음은 20~40분쯤 걸릴 수 있어요. 급하면 ‘빠른 변환’을 써 보세요.';
+    $('localHint').textContent= THREADS>1
+      ? `CPU ${THREADS}코어를 함께 써서 변환해요. 1시간 녹음은 대략 7~15분 걸려요.`
+      : '지금은 CPU 1코어로 변환해요(1시간 녹음 20~40분). coi-serviceworker.js를 index.html과 같은 폴더에 올리면 여러 코어로 빨라져요.';
   } else {
     $('model').value='turbo';
     $('localHint').textContent='그래픽 가속을 쓸 수 있어 ‘정밀’ 모델을 골라 두었어요. 처음 한 번 내려받는 데 시간이 걸려요.';
@@ -642,6 +905,7 @@ self.onmessage = async (e) => {
   const m = e.data;
   try {
     if (m.type === 'load') {
+      try { if (env.backends && env.backends.onnx && env.backends.onnx.wasm) env.backends.onnx.wasm.numThreads = m.threads; } catch(_){}
       const k = m.model + '|' + m.device + '|' + JSON.stringify(m.dtype);
       if (asr && key === k) { self.postMessage({ type:'ready' }); return; }
       if (asr) { try { await asr.dispose(); } catch(_){} asr = null; }
@@ -692,6 +956,7 @@ async function mainLoad(model, device, dtype){
   if(mt.asr && mt.key===k) return;
   if(mt.asr){ try{ await mt.asr.dispose(); }catch(e){} mt.asr=null; }
   const T=await import(TJS); T.env.allowLocalModels=false;
+  try{ if(T.env.backends&&T.env.backends.onnx&&T.env.backends.onnx.wasm) T.env.backends.onnx.wasm.numThreads=THREADS; }catch(e){}
   mt.asr=await T.pipeline('automatic-speech-recognition', model, {device, dtype, progress_callback:onDownload});
   mt.key=k;
 }
@@ -706,7 +971,7 @@ async function loadModel(key, device){
   if(!useMain){
     try{
       const w=getWorker();
-      await new Promise((res,rej)=>{ wLoad={res,rej}; w.postMessage({type:'load', model, device, dtype}); });
+      await new Promise((res,rej)=>{ wLoad={res,rej}; w.postMessage({type:'load', model, device, dtype, threads:THREADS}); });
       return;
     }catch(err){
       // Worker 생성·스크립트 로딩이 막힌 경우에만 화면 안 실행으로 전환
@@ -731,7 +996,7 @@ async function transcribeLocal(x){
   setProg('음성 모델 준비 중…', 0, '', '');
   try{ await loadModel(key, device); }
   catch(err){
-    if(device==='webgpu' && !MODELS[key].gpuOnly){ device='wasm'; $('devLabel').textContent='CPU'; await loadModel(key, device); }
+    if(device==='webgpu' && !MODELS[key].gpuOnly){ device='wasm'; $('devLabel').textContent=THREADS>1?`CPU ${THREADS}코어`:'CPU 1코어'; await loadModel(key, device); }
     else throw err;
   }
   const lang=$('lang').value||null;
@@ -768,6 +1033,14 @@ function toWav(x){
   for(let i=0;i<n;i++){ const s=Math.max(-1,Math.min(1,x[i])); v.setInt16(44+i*2, s<0?s*0x8000:s*0x7FFF, true); }
   return new Blob([buf],{type:'audio/wav'});
 }
+/* FormData 대신 직접 만든 본문(어느 창에서도 전달 가능한 형태)으로 보내기 */
+async function multipartBody(fields, fileBlob, fileName){
+  const bd='----UlalaNote'+Math.random().toString(16).slice(2);
+  const parts=[];
+  fields.forEach(([k,v])=>parts.push(`--${bd}\r\nContent-Disposition: form-data; name="${k}"\r\n\r\n${v}\r\n`));
+  parts.push(`--${bd}\r\nContent-Disposition: form-data; name="file"; filename="${fileName}"\r\nContent-Type: audio/wav\r\n\r\n`, fileBlob, `\r\n--${bd}--\r\n`);
+  return { body: await new Blob(parts).arrayBuffer(), type:'multipart/form-data; boundary='+bd };
+}
 async function transcribeAPI(x){
   const key=$('apiKey').value.trim(); if(!key) throw new Error('API 키를 넣어 주세요.');
   const prov=$('provider').value;
@@ -780,10 +1053,9 @@ async function transcribeAPI(x){
   for(const [a,b] of segs){
     if(state.cancel) break;
     const off=a/SR;
-    const fd=new FormData(); fd.append('file', toWav(x.subarray(a,b)), 'part.wav'); fd.append('model',model);
-    fd.append('response_format','verbose_json'); if(lang) fd.append('language',lang);
-    fd.append('temperature','0');
-    const res=await fetch(url,{method:'POST',headers:{Authorization:'Bearer '+key},body:fd});
+    const fields=[['model',model],['response_format','verbose_json'],['temperature','0']]; if(lang) fields.push(['language',lang]);
+    const mp=await multipartBody(fields, toWav(x.subarray(a,b)), 'part.wav');
+    const res=await fetch(url,{method:'POST',headers:{Authorization:'Bearer '+key,'Content-Type':mp.type},body:mp.body});
     if(!res.ok){ let msg=''; try{ msg=(await res.json()).error?.message||''; }catch(e){}
       if(res.status===401) throw new Error('API 키가 올바르지 않아요.');
       if(res.status===429) throw new Error('사용량 한도에 걸렸어요. 잠시 뒤 다시 해 보세요.');
@@ -806,7 +1078,7 @@ function setProg(label,pct,sub,eta){
 }
 async function run(){
   if(!state.file || state.running) return;
-  state.running=true; state.cancel=false; state.segments=[]; renderSegs();
+  state.running=true; state.cancel=false; state.segments=[]; state.summary=null; renderSummary(); renderSegs();
   $('runBtn').disabled=true; $('stopBtn').style.display=''; $('prog').classList.add('busy');
   const api=document.querySelector('input[name=mode]:checked').value==='api';
   const t0=performance.now();
@@ -820,13 +1092,14 @@ async function run(){
     if(api) await transcribeAPI(x); else await transcribeLocal(x);
     const took=(performance.now()-t0)/1000;
     if(state.cancel){ setProg('중지했어요. 여기까지의 결과를 저장했어요.', parseFloat($('progBar').style.width)||0, '', ''); toast('변환을 중지했어요.'); }
-    else { setProg('변환을 마쳤어요 ✓', 100, `${state.segments.length}개 문장 · 걸린 시간 ${fmtDur(took)}`, ''); toast('텍스트 변환을 마쳤어요.'); }
+    else { renderKeywords(); showDone($('title').value.trim()||state.file.name); setProg('변환을 마쳤어요 ✓', 100, `${state.segments.length}개 문장 · 걸린 시간 ${fmtDur(took)}`, ''); toast('텍스트 변환을 마쳤어요.'); }
     persist();
   }catch(err){
     console.error(err);
     let msg=err.message||String(err);
     if(/dynamically imported module|Failed to fetch|NetworkError|Load failed/i.test(msg))
-      msg='이 창에서는 음성 모델을 불러올 수 없어요. index.html을 내려받아 크롬이나 엣지에서 열어 주세요.';
+      msg= api ? '이 창에서는 Groq·OpenAI 서버에 연결할 수 없어요. index.html을 내려받아 크롬이나 엣지에서 열어 주세요. (인터넷 연결도 확인해 주세요)'
+               : '이 창에서는 음성 모델을 불러올 수 없어요. index.html을 내려받아 크롬이나 엣지에서 열어 주세요.';
     setProg('변환하지 못했어요', 0, msg, '');
     toast(msg);
     if(state.segments.length) persist();
@@ -837,84 +1110,476 @@ async function run(){
 $('runBtn').onclick=run;
 $('stopBtn').onclick=()=>{ state.cancel=true; $('stopBtn').textContent='중지하는 중…'; setTimeout(()=>{$('stopBtn').textContent='중지';},3000); };
 
-/* ---------- 결과 그리기 ---------- */
+/* ---------- 결과 그리기 (화자별 묶음) ---------- */
+const SP_COLORS=['#C9665A','#5E9FBA','#7C6BC6','#4E8B63','#C49B45','#B5677F','#6E7F8F','#A0794F'];
+function spName(k){ return state.attendees[k] || `참석자 ${k+1}`; }
 function addSeg(s,e,text){
   const last=state.segments[state.segments.length-1];
   if(last && last.text===text) return;
-  state.segments.push({s,e,text});
+  state.segments.push({s,e,text,sp:last?(last.sp||0):0});
   appendSegEl(state.segments.length-1);
   updateStat();
-  const box=$('segs'); if(box.scrollHeight-box.scrollTop-box.clientHeight<120) box.scrollTop=box.scrollHeight;
-  if(state.segments.length%20===0) persistSoon();
+  const box=$('segs'); if(box.scrollHeight-box.scrollTop-box.clientHeight<160) box.scrollTop=box.scrollHeight;
+  if(state.segments.length%20===0){ persistSoon(); renderKeywords(); }
+}
+function tsBtn(sg){
+  const ts=document.createElement('button'); ts.className='ts'; ts.textContent=fmt(sg.s); ts.title='이 부분 재생';
+  ts.onclick=()=>seekPlay(sg.s); return ts;
 }
 function appendSegEl(i){
   const box=$('segs'); const ph=box.querySelector('.placeholder'); if(ph) ph.remove();
-  const sg=state.segments[i];
-  const row=document.createElement('div'); row.className='seg'; row.dataset.i=i;
-  const ts=document.createElement('button'); ts.className='ts'; ts.textContent=fmt(sg.s); ts.title='이 부분 재생';
-  ts.onclick=()=>{ const p=$('player'); if(!p){ toast('원본 파일을 첨부하면 재생할 수 있어요.'); return; } p.currentTime=sg.s; p.play(); };
+  const sg=state.segments[i], prev=state.segments[i-1], sp=sg.sp||0;
+  const first=!prev||(prev.sp||0)!==sp;
+  const row=document.createElement('div'); row.className='seg'+(first?' first':''); row.dataset.i=i;
+  if(first){
+    const who=document.createElement('div'); who.className='who';
+    const b=document.createElement('button'); b.className='badge'; b.style.background=SP_COLORS[sp%SP_COLORS.length]; b.textContent=sp+1; b.title='참석자 바꾸기';
+    const nm=document.createElement('button'); nm.className='nm'; nm.textContent=spName(sp); nm.title='참석자 바꾸기';
+    b.onclick=nm.onclick=(e)=>openSpMenu(e,i);
+    who.append(b,nm,tsBtn(sg)); row.appendChild(who);
+  } else {
+    const ts=tsBtn(sg); ts.classList.add('side-ts'); row.appendChild(ts);
+    const sw=document.createElement('button'); sw.className='swap'; sw.textContent='참석자'; sw.title='이 문장부터 참석자 바꾸기';
+    sw.onclick=(e)=>openSpMenu(e,i); row.appendChild(sw);
+  }
   const tx=document.createElement('div'); tx.className='tx'; tx.contentEditable='true'; tx.spellcheck=false; tx.textContent=sg.text;
   tx.addEventListener('input',()=>{ state.segments[i].text=tx.textContent; persistSoon(); });
-  row.append(ts,tx); box.appendChild(row);
+  row.appendChild(tx); box.appendChild(row);
   applySearch(row);
 }
 function renderSegs(){
-  const box=$('segs'); box.innerHTML='';
+  const box=$('segs'); const st=box.scrollTop; box.innerHTML='';
   if(!state.segments.length){ const d=document.createElement('div'); d.className='placeholder';
-    d.textContent='변환된 글이 여기에 나타나요. 글은 바로 고칠 수 있고, 시간을 누르면 그 부분이 재생돼요.'; box.appendChild(d); updateStat(); return; }
-  state.segments.forEach((_,i)=>appendSegEl(i)); updateStat();
+    d.textContent='변환된 글이 여기에 나타나요. 글은 바로 고칠 수 있고, 시간을 누르면 그 부분이 재생돼요.'; box.appendChild(d); updateStat(); renderKeywords(); return; }
+  state.segments.forEach((_,i)=>appendSegEl(i)); updateStat(); renderKeywords(); box.scrollTop=st;
 }
 function updateStat(){
   const n=state.segments.length; if(!n){ $('stat').textContent=''; return; }
   const chars=state.segments.reduce((a,b)=>a+b.text.length,0);
-  $('stat').textContent=`${n}개 문장 · ${chars.toLocaleString()}자`;
+  const sps=new Set(state.segments.map(s=>s.sp||0)).size;
+  $('stat').textContent=`${n}개 문장 · ${chars.toLocaleString()}자 · 참석자 ${sps}명`;
 }
 function applySearch(row){
   const q=$('search').value.trim().toLowerCase();
   const rows=row?[row]:$('segs').querySelectorAll('.seg');
   rows.forEach(r=>{ r.style.display=!q||r.querySelector('.tx').textContent.toLowerCase().includes(q)?'':'none'; });
+  if(!row) $('kwList').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===$('search').value.trim()));
 }
 $('search').addEventListener('input',()=>applySearch());
 $('tsToggle').onchange=e=>$('segs').classList.toggle('no-ts',!e.target.checked);
+
+/* 참석자(화자) 바꾸기 메뉴 */
+function openSpMenu(ev,i){
+  ev.stopPropagation();
+  const m=$('spMenu'); m.innerHTML='';
+  const used=Math.max(0,...state.segments.map(s=>s.sp||0));
+  const n=Math.min(8,Math.max(state.attendees.length,used+2,3));
+  const sm=document.createElement('small'); sm.textContent='이 문장의 말한 사람'; m.appendChild(sm);
+  const lab=document.createElement('label'); const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=true;
+  lab.append(cb,document.createTextNode(' 아래로 이어진 같은 사람 문장도 함께'));
+  for(let k=0;k<n;k++){
+    const b=document.createElement('button'); b.className='opt-sp';
+    const ic=document.createElement('i'); ic.style.background=SP_COLORS[k%SP_COLORS.length]; ic.textContent=k+1;
+    b.append(ic,document.createTextNode(spName(k)));
+    b.onclick=()=>{
+      const old=state.segments[i].sp||0; state.segments[i].sp=k;
+      if(cb.checked){ for(let j=i+1;j<state.segments.length && (state.segments[j].sp||0)===old;j++) state.segments[j].sp=k; }
+      m.hidden=true; renderSegs(); persistSoon();
+    };
+    m.appendChild(b);
+  }
+  m.appendChild(lab);
+  m.hidden=false;
+  const r=ev.currentTarget.getBoundingClientRect();
+  m.style.left=Math.min(window.innerWidth-240,r.left)+'px';
+  m.style.top=Math.min(window.innerHeight-m.offsetHeight-10,r.bottom+6)+'px';
+}
+document.addEventListener('click',e=>{
+  if(!$('spMenu').hidden && !$('spMenu').contains(e.target)) $('spMenu').hidden=true;
+  if(!e.target.closest('.dd')) $('dlMenu').classList.remove('show');
+});
+
+/* ---------- 주요 키워드 ---------- */
+const STOP=new Set(('그래서 이제 그냥 우리 지금 이렇게 그렇게 저렇게 그런 이런 저런 어떤 있는 하는 같아요 같은 저희 근데 그런데 그거 이거 저거 진짜 정말 아니 많이 그리고 그러면 그럼 하고 해서 했는데 있어요 거예요 했어요 합니다 입니다 있습니다 됩니다 그게 이게 저게 여기 거기 저기 무슨 뭔가 뭐가 너무 조금 약간 계속 다시 다음 먼저 사실 아마 혹시 일단 그죠 맞아요 맞습니다 네네 아니요 하는데 하면 해요 했던 있고 있는데 되는 되게 하나 정도 부분 경우 때문 생각 이야기 얘기 말씀 거기서 여기서 우리가 제가 저는 나는 내가 선생님 수석님 그거는 이거는 이렇게요 감사합니다 안녕하세요 the and that this with for you are was have of to in it is be').split(' '));
+const JOSA=['에서는','으로는','에게는','이라는','이라고','에서','으로','에게','한테','까지','부터','처럼','보다','라는','라고','이랑','하고','은','는','이','가','을','를','에','의','도','로','와','과','만','랑','요'];
+function tokenize(t){
+  const out=[];
+  (t.match(/[가-힣]{2,}|[A-Za-z][A-Za-z\-]{2,}|\d+(?:쪽|페이지|단계|장)/g)||[]).forEach(w=>{
+    let x=w;
+    if(/[가-힣]/.test(x)){ for(const j of JOSA){ if(x.length>j.length+1 && x.endsWith(j)){ x=x.slice(0,-j.length); break; } } }
+    else x=x.toLowerCase();
+    if(x.length<2||STOP.has(x)) return;
+    if(/(습니다|어요|아요|해요|했다|한다|하는|해서|하고|니다|는데|니까|거든|잖아|네요|세요|겠다|었다|았다|ㄴ다|하게|하면|되는|되고|이죠|지요|군요|구나|같이|었고|았고)$/.test(x)) return;
+    out.push(x);
+  });
+  return out;
+}
+function keywordCounts(){
+  const cnt=new Map();
+  state.segments.forEach(s=>tokenize(s.text).forEach(w=>cnt.set(w,(cnt.get(w)||0)+1)));
+  return cnt;
+}
+function renderKeywords(){
+  const list=$('kwList'); list.innerHTML='';
+  if(state.segments.length<3){ $('kwBox').hidden=true; return; }
+  const top=[...keywordCounts().entries()].filter(([w,c])=>c>=2).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  if(!top.length){ $('kwBox').hidden=true; return; }
+  $('kwBox').hidden=false;
+  top.forEach(([w])=>{ const b=document.createElement('button'); b.textContent=w; b.title='이 낱말이 나온 문장만 보기';
+    b.onclick=()=>{ $('search').value=($('search').value===w)?'':w; applySearch(); }; list.appendChild(b); });
+}
+
+/* ---------- 요약 ---------- */
+function extractive(){
+  const cnt=keywordCounts();
+  const scored=state.segments.map((s,i)=>{ const tk=tokenize(s.text); const sc=tk.reduce((a,w)=>a+Math.log(1+(cnt.get(w)||0)),0)/Math.sqrt(tk.length+1);
+    return {i,sc:s.text.length<20?0:sc}; });
+  const n=Math.min(8,Math.max(3,Math.round(state.segments.length/25)));
+  return scored.sort((a,b)=>b.sc-a.sc).slice(0,n).sort((a,b)=>a.i-b.i).map(o=>o.i);
+}
+function renderSummary(){
+  const out=$('sumOut'); out.innerHTML='';
+  const S=state.summary; if(!S) return;
+  if(S.kind==='auto'){
+    const h=document.createElement('h4'); h.textContent='핵심 문장'; out.appendChild(h);
+    const ul=document.createElement('ul');
+    S.idx.forEach(i=>{ const sg=state.segments[i]; if(!sg) return; const li=document.createElement('li');
+      const b=document.createElement('button'); b.className='tsl'; b.textContent=fmt(sg.s); b.onclick=()=>seekPlay(sg.s);
+      li.append(b,document.createTextNode(sg.text)); ul.appendChild(li); });
+    out.appendChild(ul);
+    const nt=document.createElement('div'); nt.className='note'; nt.textContent='녹음에서 자주 나온 낱말을 바탕으로 고른 문장이에요. ‘빠른 변환’에 API 키를 넣으면 AI가 글로 요약해 드려요.'; out.appendChild(nt);
+  } else {
+    let ul=null;
+    S.text.split('\n').forEach(line=>{
+      const l=line.trim(); if(!l){ ul=null; return; }
+      if(/^#{1,4}\s/.test(l)){ const h=document.createElement('h4'); h.textContent=l.replace(/^#+\s*/,'').replace(/\*\*/g,''); out.appendChild(h); ul=null; }
+      else if(/^[-*•]\s|^\d+[.)]\s/.test(l)){ if(!ul){ ul=document.createElement('ul'); out.appendChild(ul); } const li=document.createElement('li'); li.textContent=l.replace(/^[-*•]\s|^\d+[.)]\s/,'').replace(/\*\*/g,''); ul.appendChild(li); }
+      else { const p=document.createElement('p'); p.textContent=l.replace(/\*\*/g,''); out.appendChild(p); ul=null; }
+    });
+  }
+}
+function summaryPlain(){
+  const S=state.summary; if(!S) return '';
+  if(S.kind==='auto') return S.idx.map(i=>state.segments[i]).filter(Boolean).map(s=>`- [${fmt(s.s)}] ${s.text}`).join('\n');
+  return S.text.replace(/\*\*/g,'');
+}
+async function chat(prov,key,msgs){
+  const url=prov==='groq'?'https://api.groq.com/openai/v1/chat/completions':'https://api.openai.com/v1/chat/completions';
+  const models=prov==='groq'?['llama-3.3-70b-versatile','openai/gpt-oss-120b']:['gpt-4o-mini'];
+  for(let attempt=0;attempt<4;attempt++){
+    for(const model of models){
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},
+        body:JSON.stringify({model,messages:msgs,temperature:0.3})});
+      if(res.ok){ const j=await res.json(); return j.choices[0].message.content; }
+      if(res.status===401) throw new Error('API 키가 올바르지 않아요.');
+      if(res.status===429){ const w=Math.min(60,parseFloat(res.headers.get('retry-after'))||20); $('sumOut').textContent=`사용량 한도로 ${Math.round(w)}초 기다렸다가 이어서 요약해요…`; await new Promise(r=>setTimeout(r,w*1000)); break; }
+      if(res.status===404||res.status===400) continue;
+      throw new Error('요약 서버 오류('+res.status+')');
+    }
+  }
+  throw new Error('요약하지 못했어요. 잠시 뒤 다시 해 보세요.');
+}
+async function summarize(){
+  if(!state.segments.length) return toast('먼저 텍스트로 변환해 주세요.');
+  const key=$('apiKey').value.trim(), prov=$('provider').value;
+  if(!key){ state.summary={kind:'auto',idx:extractive()}; renderSummary(); persistSoon(); return; }
+  const btn=$('sumBtn'); btn.disabled=true; btn.textContent='요약 중…';
+  try{
+    const lines=state.segments.map(s=>`[${fmt(s.s)}] ${spName(s.sp||0)}: ${s.text}`);
+    const lim=prov==='groq'?5000:30000; const parts=[]; let cur='';
+    lines.forEach(l=>{ if(cur.length+l.length>lim){ parts.push(cur); cur=''; } cur+=l+'\n'; }); if(cur) parts.push(cur);
+    const sys='당신은 학교 선생님의 모임·수업 녹음 기록을 정리하는 도우미입니다. 받아쓰기 오류가 섞여 있을 수 있으니 문맥으로 바로잡아 이해하세요. 반드시 한국어로, 사실에 근거해서만 쓰세요.';
+    let notes=[];
+    if(parts.length>1){
+      for(let k=0;k<parts.length;k++){
+        $('sumOut').textContent=`긴 기록을 나누어 읽는 중… (${k+1}/${parts.length})`;
+        notes.push(await chat(prov,key,[{role:'system',content:sys},{role:'user',content:`다음은 전체 녹음 기록 중 ${k+1}번째 부분입니다. 중요한 내용, 나온 질문과 의견, 정해진 일을 글머리표로 빠짐없이 정리하세요.\n\n${parts[k]}`}]));
+      }
+    }
+    $('sumOut').textContent='요약을 다듬는 중…';
+    const body=parts.length>1?notes.map((n,k)=>`(${k+1}부분)\n${n}`).join('\n\n'):parts[0];
+    const text=await chat(prov,key,[{role:'system',content:sys},{role:'user',content:
+`아래 ${parts.length>1?'부분별 정리':'녹음 기록'}를 바탕으로 다음 형식에 맞춰 요약하세요.
+## 한 줄 요약
+## 주요 내용
+(글머리표 5~8개)
+## 나온 질문과 의견
+(글머리표)
+## 다음에 할 일
+(정해진 것이 있을 때만, 없으면 '없음')
+
+${body}`}]);
+    state.summary={kind:'ai',text}; renderSummary(); persistSoon(); toast('요약을 마쳤어요.');
+  }catch(err){ $('sumOut').textContent=''; toast(err.message||String(err)); }
+  finally{ btn.disabled=false; btn.textContent='요약'; }
+}
+$('sumBtn').onclick=summarize;
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $('paneSum').hidden=b.dataset.tab!=='sum'; $('paneMemo').hidden=b.dataset.tab!=='memo';
+});
+
+/* ---------- 재생 막대 ---------- */
+function player(){ return $('player'); }
+function seekPlay(t){ const p=player(); if(!p){ toast('원본 파일을 첨부하면 재생할 수 있어요.'); return; } p.currentTime=t; p.play(); }
+function setPlayIcon(){ const p=player(); $('pPlay').innerHTML=`<svg class="i"><use href="#i-${p&&!p.paused?'pause':'play'}"/></svg>`; }
+function bindPlayer(p){
+  $('pbar').hidden=false;
+  p.addEventListener('timeupdate',()=>{ $('pCur').textContent=fmt(p.currentTime); if(isFinite(p.duration)&&!seeking) $('pSeek').value=p.currentTime/p.duration*1000; highlightNow(); });
+  p.addEventListener('loadedmetadata',()=>{ $('pDur').textContent=fmt(p.duration); p.playbackRate=SPEEDS[spIdx]; });
+  p.addEventListener('play',setPlayIcon); p.addEventListener('pause',setPlayIcon); p.addEventListener('ended',setPlayIcon);
+}
+let seeking=false; const SPEEDS=[1,1.25,1.5,2,0.75]; let spIdx=0;
+$('pSeek').addEventListener('input',()=>{ seeking=true; const p=player(); if(p&&isFinite(p.duration)) $('pCur').textContent=fmt($('pSeek').value/1000*p.duration); });
+$('pSeek').addEventListener('change',()=>{ const p=player(); if(p&&isFinite(p.duration)) p.currentTime=$('pSeek').value/1000*p.duration; seeking=false; });
+$('pPlay').onclick=()=>{ const p=player(); if(!p) return; p.paused?p.play():p.pause(); };
+$('pBack').onclick=()=>{ const p=player(); if(p) p.currentTime=Math.max(0,p.currentTime-5); };
+$('pFwd').onclick=()=>{ const p=player(); if(p) p.currentTime=Math.min(p.duration||0,p.currentTime+5); };
+$('pSpeed').onclick=()=>{ spIdx=(spIdx+1)%SPEEDS.length; $('pSpeed').textContent=SPEEDS[spIdx]+'x'; const p=player(); if(p) p.playbackRate=SPEEDS[spIdx]; };
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('input,textarea,[contenteditable="true"],select')||!player()) return;
+  if(e.code==='Space'){ e.preventDefault(); $('pPlay').click(); }
+});
 let lastNow=-1;
 function highlightNow(){
-  const p=$('player'); if(!p||!state.segments.length) return; const t=p.currentTime;
+  const p=player(); if(!p||!state.segments.length) return; const t=p.currentTime;
   let idx=-1; for(let i=0;i<state.segments.length;i++){ if(state.segments[i].s<=t) idx=i; else break; }
   if(idx===lastNow) return; lastNow=idx;
   $('segs').querySelectorAll('.seg.now').forEach(r=>r.classList.remove('now'));
   const r=$('segs').querySelector(`.seg[data-i="${idx}"]`); if(r){ r.classList.add('now'); if(!p.paused) r.scrollIntoView({block:'nearest',behavior:'smooth'}); }
 }
 
-/* ---------- 내보내기 ---------- */
-function buildText(){
-  const withTs=$('tsToggle').checked;
-  const head=[`제목: ${$('title').value.trim()||'새로운 노트'}`, `날짜: ${$('date').value}`];
-  if(state.attendees.length) head.push(`참석자: ${state.attendees.join(', ')}`);
-  const body=withTs? state.segments.map(s=>`[${fmt(s.s)}] ${s.text}`).join('\n')
-                   : state.segments.map(s=>s.text).join(' ').replace(/([.?!。])\s+/g,'$1\n');
-  let out=head.join('\n')+'\n\n'+body;
-  if($('memo').value.trim()) out+='\n\n[메모]\n'+$('memo').value.trim();
+/* ---------- 파일 만들기 (zip) ---------- */
+const CRC_T=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC_T[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function makeZip(files){
+  const enc=new TextEncoder(), parts=[], central=[]; let off=0;
+  for(const f of files){
+    const name=enc.encode(f.name), data=typeof f.data==='string'?enc.encode(f.data):f.data, crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true); lh.setUint16(4,20,true); lh.setUint16(10,0,true); lh.setUint16(12,0x21,true);
+    lh.setUint32(14,crc,true); lh.setUint32(18,data.length,true); lh.setUint32(22,data.length,true); lh.setUint16(26,name.length,true);
+    parts.push(new Uint8Array(lh.buffer),name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true); ch.setUint16(4,20,true); ch.setUint16(6,20,true); ch.setUint16(14,0x21,true);
+    ch.setUint32(16,crc,true); ch.setUint32(20,data.length,true); ch.setUint32(24,data.length,true); ch.setUint16(28,name.length,true); ch.setUint32(42,off,true);
+    central.push(new Uint8Array(ch.buffer),name);
+    off+=30+name.length+data.length;
+  }
+  const cs=central.reduce((a,b)=>a+b.length,0), end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true); end.setUint16(8,files.length,true); end.setUint16(10,files.length,true); end.setUint32(12,cs,true); end.setUint32(16,off,true);
+  return [...parts,...central,new Uint8Array(end.buffer)];
+}
+const esc=s=>String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function b64u8(b){ const s=atob(b), u=new Uint8Array(s.length); for(let i=0;i<s.length;i++) u[i]=s.charCodeAt(i); return u; }
+
+/* 문서 내용: [{type:'title'|'info'|'head'|'who'|'text'|'blank', text, name, time}] */
+function blocksOf(opt){
+  const out=[]; const title=$('title').value.trim()||'새로운 노트';
+  out.push({type:'title',text:title});
+  const info=[`날짜: ${$('date').value}`]; if(state.duration) info.push(`길이: ${fmtDur(state.duration)}`);
+  out.push({type:'info',text:info.join('   ')});
+  if(opt.sp && state.attendees.length) out.push({type:'info',text:`참석자: ${state.attendees.join(', ')}`});
+  out.push({type:'blank'});
+  if(opt.mode==='summary'){
+    out.push({type:'head',text:'요약'});
+    const st=summaryPlain(); if(st) st.split('\n').forEach(l=>out.push(l.trim()?{type:/^#{1,4}\s/.test(l)?'sub':'text',text:l.replace(/^#+\s*/,'')}:{type:'blank'}));
+    else out.push({type:'text',text:'(아직 요약하지 않았어요)'});
+    out.push({type:'blank'});
+    out.push({type:'head',text:'메모'});
+    ($('memo').value.trim()||'(메모 없음)').split('\n').forEach(l=>out.push({type:'text',text:l}));
+    return out;
+  }
+  // 화자별 묶음
+  let g=null; const groups=[];
+  state.segments.forEach(s=>{ const sp=s.sp||0; if(!g||g.sp!==sp||!opt.sp&&!opt.ts){ g={sp,s:s.s,texts:[]}; groups.push(g);} g.texts.push(s.text); });
+  if(!opt.sp && !opt.ts){
+    const all=state.segments.map(s=>s.text).join(' ');
+    all.replace(/([.?!])\s+/g,'$1\n').split('\n').forEach(l=>out.push({type:'text',text:l}));
+  } else {
+    groups.forEach(gr=>{ out.push({type:'who',name:opt.sp?spName(gr.sp):'',time:opt.ts?fmt(gr.s):''}); out.push({type:'text',text:gr.texts.join(' ')}); out.push({type:'blank'}); });
+  }
+  if(opt.memo && $('memo').value.trim()){ out.push({type:'head',text:'메모'}); $('memo').value.trim().split('\n').forEach(l=>out.push({type:'text',text:l})); }
   return out;
 }
-function download(name, text){
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+text],{type:'text/plain;charset=utf-8'}));
-  a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+function toTxt(bl){
+  return bl.map(b=>b.type==='blank'?'':b.type==='who'?[b.name,b.time].filter(Boolean).join('  '):b.type==='head'?`[${b.text}]`:b.text).join('\n').replace(/\n{3,}/g,'\n\n');
+}
+function toHwpx(bl){
+  const T=HWPX_TPL; let pid=1;
+  const p=(runs,para=0)=>`<hp:p id="${pid++}" paraPrIDRef="${para}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">`+
+    runs.map(([tx,cp])=>`<hp:run charPrIDRef="${cp}"><hp:t>${esc(tx)}</hp:t></hp:run>`).join('')+`</hp:p>`;
+  const title=bl[0].text; let body='';
+  bl.slice(1).forEach(b=>{
+    if(b.type==='blank') body+=p([['',0]]);
+    else if(b.type==='info') body+=p([[b.text,9]]);
+    else if(b.type==='head') body+=p([[b.text,10]]);
+    else if(b.type==='sub') body+=p([[b.text,8]]);
+    else if(b.type==='who') body+=p([[b.name?b.name+'  ':'',8],[b.time,9]]);
+    else body+=p([[b.text,0]]);
+  });
+  const sec=T.secHead.replace('{{TITLE}}',esc(title))+body+'</hs:sec>';
+  return makeZip([
+    {name:'mimetype',data:'application/hwp+zip'},
+    {name:'version.xml',data:T.version},
+    {name:'Contents/header.xml',data:T.header},
+    {name:'Contents/section0.xml',data:sec},
+    {name:'Preview/PrvText.txt',data:title},
+    {name:'settings.xml',data:T.settings},
+    {name:'Preview/PrvImage.png',data:b64u8(T.png)},
+    {name:'META-INF/container.rdf',data:T.rdf},
+    {name:'Contents/content.hpf',data:T.hpf.replace('{{TITLE}}',esc(title))},
+    {name:'META-INF/container.xml',data:T.container},
+    {name:'META-INF/manifest.xml',data:T.manifest}
+  ]);
+}
+function toDocx(bl){
+  const r=(tx,o={})=>`<w:r><w:rPr><w:rFonts w:ascii="맑은 고딕" w:eastAsia="맑은 고딕" w:hAnsi="맑은 고딕"/>${o.b?'<w:b/>':''}${o.c?`<w:color w:val="${o.c}"/>`:''}<w:sz w:val="${o.sz||21}"/></w:rPr><w:t xml:space="preserve">${esc(tx)}</w:t></w:r>`;
+  const p=(runs,sp=60)=>`<w:p><w:pPr><w:spacing w:after="${sp}" w:line="300" w:lineRule="auto"/></w:pPr>${runs.join('')}</w:p>`;
+  let body='';
+  bl.forEach(b=>{
+    if(b.type==='title') body+=p([r(b.text,{b:1,sz:32,c:'1F3428'})],160);
+    else if(b.type==='info') body+=p([r(b.text,{c:'808080',sz:19})]);
+    else if(b.type==='blank') body+=p([],0);
+    else if(b.type==='head') body+=p([r(b.text,{b:1,sz:24,c:'1F3428'})],100);
+    else if(b.type==='sub') body+=p([r(b.text,{b:1,sz:22,c:'2C4636'})]);
+    else if(b.type==='who') body+=p([r(b.name?b.name+'  ':'',{b:1,c:'2C4636'}),r(b.time,{c:'808080',sz:18})],20);
+    else body+=p([r(b.text)]);
+  });
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1300" w:bottom="1440" w:left="1300" w:header="851" w:footer="992" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  return makeZip([
+    {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'},
+    {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'},
+    {name:'word/document.xml',data:doc}
+  ]);
+}
+function toXlsx(opt){
+  const cols=['번호']; if(opt.sp) cols.push('참석자'); if(opt.ts) cols.push('시작','끝'); cols.push('내용');
+  const L=i=>String.fromCharCode(65+i);
+  const cell=(ri,ci,v,s)=>typeof v==='number'?`<c r="${L(ci)}${ri}"${s?` s="${s}"`:''}><v>${v}</v></c>`:`<c r="${L(ci)}${ri}" t="inlineStr"${s?` s="${s}"`:''}><is><t xml:space="preserve">${esc(v)}</t></is></c>`;
+  let rows=`<row r="1">${cols.map((c,i)=>cell(1,i,c,1)).join('')}</row>`;
+  state.segments.forEach((s,k)=>{ const v=[k+1]; if(opt.sp) v.push(spName(s.sp||0)); if(opt.ts) v.push(fmt(s.s),fmt(s.e)); v.push(s.text);
+    rows+=`<row r="${k+2}">${v.map((x,i)=>cell(k+2,i,x,i===v.length-1?2:0)).join('')}</row>`; });
+  const widths=cols.map(c=>c==='내용'?90:c==='참석자'?14:c==='번호'?7:10);
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${rows}</sheetData></worksheet>`;
+  const styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="맑은 고딕"/></font><font><b/><sz val="11"/><name val="맑은 고딕"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE4ECE4"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf></cellXfs></styleSheet>';
+  return makeZip([
+    {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+    {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+    {name:'xl/workbook.xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="음성 기록" sheetId="1" r:id="rId1"/></sheets></workbook>'},
+    {name:'xl/_rels/workbook.xml.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},
+    {name:'xl/worksheets/sheet1.xml',data:sheet},
+    {name:'xl/styles.xml',data:styles}
+  ]);
+}
+function toSrt(opt){
+  return state.segments.map((s,i)=>`${i+1}\n${fmt(s.s,true)} --> ${fmt(Math.max(s.e,s.s+0.5),true)}\n${opt.sp?spName(s.sp||0)+': ':''}${s.text}\n`).join('\n');
+}
+function saveBlob(name, parts, type){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(parts,{type}));
+  a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
 }
 function safeName(){ return ($('title').value.trim()||'음성노트').replace(/[\\/:*?"<>|]/g,'_'); }
+function buildFile(fmtv,opt){
+  const nm=safeName()+(opt.mode==='summary'?'_요약메모':'');
+  if(fmtv==='txt') return [nm+'.txt',['﻿'+toTxt(blocksOf(opt))],'text/plain;charset=utf-8'];
+  if(fmtv==='hwpx') return [nm+'.hwpx',toHwpx(blocksOf(opt)),'application/hwp+zip'];
+  if(fmtv==='docx') return [nm+'.docx',toDocx(blocksOf(opt)),'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if(fmtv==='xlsx') return [nm+'.xlsx',toXlsx(opt),'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+  return [nm+'.srt',['﻿'+toSrt(opt)],'text/plain;charset=utf-8'];
+}
+
+/* ---------- 다운로드 창 ---------- */
+let dlMode='record';
+$('dlBtn').onclick=(e)=>{ e.stopPropagation(); $('dlMenu').classList.toggle('show'); };
+$('dlMenu').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  $('dlMenu').classList.remove('show'); const k=b.dataset.dl;
+  if(k==='audio'){ if(!state.file) return toast('원본 파일을 첨부했을 때만 내려받을 수 있어요.'); saveBlob(state.file.name,[state.file],state.file.type); return; }
+  if(k==='record' && !state.segments.length) return toast('아직 변환 결과가 없어요.');
+  if(k==='summary' && !state.summary && !$('memo').value.trim()) return toast('요약이나 메모가 아직 없어요.');
+  openDl(k);
+});
+function openDl(mode){
+  dlMode=mode;
+  $('dlTitle').textContent=mode==='summary'?'요약·메모를 다운로드할까요?':'음성 기록을 다운로드할까요?';
+  document.querySelectorAll('.fmt-opt').forEach(l=>{ const v=l.querySelector('input').value; l.classList.toggle('off',mode==='summary'&&(v==='xlsx'||v==='srt')); });
+  if(mode==='summary'){ const c=document.querySelector('input[name=fmt]:checked'); if(c.value==='xlsx'||c.value==='srt') document.querySelector('input[name=fmt][value=txt]').checked=true; }
+  $('incl').style.display=mode==='summary'?'none':'';
+  $('dlModal').hidden=false;
+}
+document.querySelectorAll('input[name=fmt]').forEach(r=>r.addEventListener('change',()=>{
+  const v=document.querySelector('input[name=fmt]:checked').value;
+  $('incMemo').closest('label').classList.toggle('off',v==='xlsx'||v==='srt');
+  $('incTs').closest('label').classList.toggle('off',v==='srt');
+}));
+$('dlCancel').onclick=()=>$('dlModal').hidden=true;
+$('dlModal').addEventListener('click',e=>{ if(e.target===$('dlModal')) $('dlModal').hidden=true; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ $('dlModal').hidden=true; $('spMenu').hidden=true; } });
+$('dlGo').onclick=()=>{
+  const v=document.querySelector('input[name=fmt]:checked').value;
+  const opt={mode:dlMode, ts:$('incTs').checked, sp:$('incSp').checked, memo:$('incMemo').checked};
+  try{ const [name,parts,type]=buildFile(v,opt); saveBlob(name,parts,type); $('dlModal').hidden=true; toast('내려받기를 시작했어요.'); }
+  catch(err){ console.error(err); toast('파일을 만들지 못했어요: '+err.message); }
+};
 $('copyBtn').onclick=async()=>{ if(!state.segments.length) return toast('아직 결과가 없어요.');
-  const withTs=$('tsToggle').checked;
-  const t=withTs?state.segments.map(s=>`[${fmt(s.s)}] ${s.text}`).join('\n'):state.segments.map(s=>s.text).join(' ');
-  try{ await navigator.clipboard.writeText(t); toast('복사했어요.'); }catch(e){ toast('복사하지 못했어요. TXT 저장을 써 주세요.'); } };
-$('txtBtn').onclick=()=>{ if(!state.segments.length) return toast('아직 결과가 없어요.'); download(safeName()+'.txt', buildText()); };
-$('srtBtn').onclick=()=>{ if(!state.segments.length) return toast('아직 결과가 없어요.');
-  const srt=state.segments.map((s,i)=>`${i+1}\n${fmt(s.s,true)} --> ${fmt(Math.max(s.e,s.s+0.5),true)}\n${s.text}\n`).join('\n');
-  download(safeName()+'.srt', srt); };
+  const t=toTxt(blocksOf({mode:'record',ts:$('tsToggle').checked,sp:true,memo:false}).filter(b=>['who','text','blank'].includes(b.type)));
+  try{ await navigator.clipboard.writeText(t.trim()); toast('복사했어요.'); }catch(e){ toast('복사하지 못했어요. 다운로드를 써 주세요.'); } };
+
+/* ---------- 전체 노트 화면 ---------- */
+function showList(on){
+  $('listView').hidden=!on; $('editorView').hidden=on; $('navAll').classList.toggle('on',on);
+  if(on){ renderList(); $('allSearch').focus(); }
+}
+function noteText(n){ return (n.segments||[]).map(s=>s.text).join(' '); }
+function renderList(){
+  const q=$('allSearch').value.trim().toLowerCase(), sort=$('sortSel').value;
+  let arr=loadNotes();
+  if(q) arr=arr.filter(n=>(n.title+' '+noteText(n)+' '+(n.memo||'')).toLowerCase().includes(q));
+  arr.sort((a,b)=> sort==='old'?(a.updated||0)-(b.updated||0): sort==='long'?(b.duration||0)-(a.duration||0): sort==='title'?(a.title||'').localeCompare(b.title||'','ko'):(b.updated||0)-(a.updated||0));
+  const box=$('lvTable'); box.innerHTML='';
+  if(!arr.length){ const d=document.createElement('div'); d.className='lv-empty'; d.textContent=q?'찾는 노트가 없어요.':'아직 저장된 노트가 없어요. 녹음하거나 파일을 올려 첫 노트를 만들어 보세요.'; box.appendChild(d); return; }
+  const cap=document.createElement('div'); cap.className='lv-cap'; ['','제목 · 내용','만든 때','길이',''].forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; cap.appendChild(sp); }); box.appendChild(cap);
+  arr.forEach(n=>{
+    const row=document.createElement('div'); row.className='lv-row';
+    const ic=document.createElement('span'); ic.className='ic'; ic.innerHTML='<svg class="i"><use href="#i-up"/></svg>';
+    const mid=document.createElement('div'); const b=document.createElement('b'); b.textContent=n.title||'새로운 노트';
+    const p=document.createElement('p'); const full=noteText(n)||n.memo||'(내용 없음)';
+    if(q){ const k=full.toLowerCase().indexOf(q); const st=Math.max(0,k-30); const piece=(st?'…':'')+full.slice(st,st+160);
+      const ki=piece.toLowerCase().indexOf(q); if(ki>=0){ p.append(piece.slice(0,ki)); const mk=document.createElement('mark'); mk.textContent=piece.slice(ki,ki+q.length); p.append(mk,piece.slice(ki+q.length)); } else p.textContent=piece; }
+    else p.textContent=full.slice(0,180);
+    mid.append(b,p);
+    const d=document.createElement('span'); d.className='d'; d.textContent=whenLabel(n);
+    const m=document.createElement('span'); m.className='m'; m.textContent=n.duration?Math.max(1,Math.round(n.duration/60))+'분':'-';
+    const del=document.createElement('button'); del.className='del'; del.textContent='✕'; del.title='삭제';
+    del.onclick=(e)=>{ e.stopPropagation(); if(!confirm(`‘${n.title}’ 노트를 지울까요?`)) return; saveNotes(loadNotes().filter(x=>x.id!==n.id)); if(n.id===state.noteId) resetNote(); renderNotes(); renderList(); };
+    row.onclick=()=>{ showList(false); openNote(n.id); };
+    row.append(ic,mid,d,m,del); box.appendChild(row);
+  });
+}
+function whenLabel(n){
+  const t=new Date(n.updated||Date.now()), now=new Date();
+  const hm=t.toLocaleTimeString('ko-KR',{hour:'numeric',minute:'2-digit'});
+  if(t.toDateString()===now.toDateString()) return '오늘 '+hm;
+  const wd='일월화수목금토'[t.getDay()];
+  return `${t.getMonth()+1}.${t.getDate()} ${wd} ${hm}`;
+}
+$('navAll').onclick=()=>showList($('listView').hidden);
+$('allSearch').addEventListener('input',renderList);
+$('sortSel').onchange=renderList;
+
+/* 변환 완료 알림 */
+function showDone(title){
+  $('doneText').textContent=`‘${title}’ 변환 완료`; $('doneCard').hidden=false;
+  clearTimeout(showDone._h); showDone._h=setTimeout(()=>$('doneCard').hidden=true,9000);
+}
+$('doneCard').onclick=()=>{ $('doneCard').hidden=true; showList(false); $('segs').scrollIntoView({behavior:'smooth',block:'start'}); };
+$('doneX').onclick=(e)=>{ e.stopPropagation(); $('doneCard').hidden=true; };
 
 /* ---------- 입력 저장 ---------- */
 $('memo').addEventListener('input',persistSoon);
 $('title').addEventListener('input',persistSoon);
 $('date').addEventListener('change',persistSoon);
-$('newNote').onclick=resetNote;
+$('newNote').onclick=()=>{ showList(false); resetNote(); };
 window.addEventListener('beforeunload',e=>{ if(state.running){ e.preventDefault(); e.returnValue=''; } });
 
 /* ---------- 시작 ---------- */
